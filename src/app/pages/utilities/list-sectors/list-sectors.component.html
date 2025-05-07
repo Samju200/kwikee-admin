@@ -1,0 +1,144 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row g-2 justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Sectors</h4>
+        <p>View all your available sectors</p>
+      </div>
+      <div class="col-auto ms-auto">
+        <button (click)="openSectorModal()"  class="btn btn-purple btn-lg py-2 px-3" type="button">
+          Add Sector
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>All Sectors</h5>
+                <p>View all your available sectors</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchSectors($event)"></search-input>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col" [width]="'30%'">Sector Name</th>
+                          <th scope="col">Sector Score</th>
+                          <th scope="col">Sector Code</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="sectorsData.length; else showNodata">
+                          <tr *ngFor="let sector of sectorsData | searchFilter: searchText: 'sector_name'">
+                            <td>
+                              <button (click)="populateFormForEdit(sector)" class="btn btn-sm btn-action"
+                                type="button">
+                                <i class="ri-edit-line"></i>Edit
+                              </button>
+                            </td>
+                            <td>{{sector.sector_name}}</td>
+                            <td>{{sector.sector_score}}</td>
+                            <td>{{sector.sector_code}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<div class="modal fade" id="sectorModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeSectorModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">
+          {{actionType == 'edit'? 'Edit sector':  'Add sector'}}</h5>
+        <div class="modal-body">
+          <form [formGroup]="sectorForm" action="">
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Sector Name</legend>
+                <input type="text" name="sector_name" formControlName="sector_name">
+              </fieldset>
+              <ng-container
+                *ngIf="(sectorForm.controls['sector_name'].dirty || sectorForm.controls['sector_name'].touched) && sectorForm.controls['sector_name'].errors">
+                <small *ngIf="sectorForm.controls['sector_name'].errors['required']" class="text-danger text-xs">Enter
+                  name</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Sector Code</legend>
+                <input type="number" formControlName="sector_code">
+              </fieldset>
+              <ng-container
+                *ngIf="(sectorForm.controls['sector_code'].dirty || sectorForm.controls['sector_code'].touched) && sectorForm.controls['sector_code'].errors">
+                <small *ngIf="sectorForm.controls['sector_code'].errors['required']" class="text-danger text-xs">Enter
+                  code</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Sector Score</legend>
+                <input type="number" formControlName="sector_score">
+              </fieldset>
+              <ng-container
+                *ngIf="(sectorForm.controls['sector_score'].dirty || sectorForm.controls['sector_score'].touched) && sectorForm.controls['sector_score'].errors">
+                <small *ngIf="sectorForm.controls['sector_score'].errors['required']" class="text-danger text-xs">Enter
+                  score</small>
+              </ng-container>
+            </div>
+            <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="updateSector()">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!isLoading">
+                Save Changes
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

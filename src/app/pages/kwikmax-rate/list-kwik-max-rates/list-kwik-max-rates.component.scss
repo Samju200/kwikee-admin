@@ -1,0 +1,101 @@
+/* Modal Backdrop Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  opacity: 0;
+  transition: opacity 0.15s linear;
+
+  &.show {
+    opacity: 0.5;
+  }
+}
+
+/* Modal Container Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+
+  &.show {
+    display: block;
+
+    .modal-dialog {
+      transform: none;
+    }
+  }
+}
+
+/* Modal Dialog Styles */
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+  transition: transform 0.3s ease-out;
+
+  @media (min-width: 576px) {
+    max-width: 500px;
+    margin: 1.75rem auto;
+  }
+}
+
+/* Modal Content Styles */
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+
+/* Button States */
+.btn {
+  transition: all 0.2s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+}
+
+/* Table Responsiveness */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Form Validation Styles */
+.invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.is-invalid ~ .invalid-feedback {
+  display: block;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  vertical-align: text-bottom;
+}

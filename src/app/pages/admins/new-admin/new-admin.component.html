@@ -1,0 +1,270 @@
+<div class="greetings-area mt-5">
+  <div class="row align-items-center g-2">
+    <div class="col-md-6 col-lg-5">
+      <h4>New Team Member</h4>
+      <p>Add new member to the team</p>
+    </div>
+    <div class="col-auto ms-auto">
+      <button
+        [disabled]="loading"
+        (click)="addTeamMember()"
+        class="btn btn-purple btn-lg py-2 px-3"
+        type="button"
+      >
+        <div
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <span *ngIf="!loading">Save Changes</span>
+      </button>
+    </div>
+    <div class="col-auto">
+      <button
+        [disabled]="loading"
+        [routerLink]="['/teams']"
+        class="btn btn-outline-dark py-2 px-3"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <loading-spinner style="min-height: 500px" [spinning]="loading">
+    <div class="row">
+      <div class="col-sm-12 mb-5">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="px-1">
+              <form [formGroup]="createUserForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>First Name</legend>
+                        <input
+                          type="text"
+                          name="first_name"
+                          formControlName="first_name"
+                        />
+                      </fieldset>
+                      <ng-container
+                        *ngIf="
+                          (createUserForm.controls['first_name'].dirty ||
+                            createUserForm.controls['first_name'].touched) &&
+                          createUserForm.controls['first_name'].errors
+                        "
+                      >
+                        <small
+                          *ngIf="
+                            createUserForm.controls['first_name'].errors[
+                              'required'
+                            ]
+                          "
+                          class="text-danger text-xs"
+                          >Enter first name</small
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Last Name</legend>
+                        <input
+                          type="text"
+                          name="last_name"
+                          formControlName="last_name"
+                        />
+                      </fieldset>
+                      <ng-container
+                        *ngIf="
+                          (createUserForm.controls['last_name'].dirty ||
+                            createUserForm.controls['last_name'].touched) &&
+                          createUserForm.controls['last_name'].errors
+                        "
+                      >
+                        <small
+                          *ngIf="
+                            createUserForm.controls['last_name'].errors[
+                              'required'
+                            ]
+                          "
+                          class="text-danger text-xs"
+                          >Enter last name</small
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Email</legend>
+                        <input
+                          type="email"
+                          name="email"
+                          formControlName="email"
+                        />
+                      </fieldset>
+                      <ng-container
+                        *ngIf="
+                          (createUserForm.controls['email'].dirty ||
+                            createUserForm.controls['email'].touched) &&
+                          createUserForm.controls['email'].errors
+                        "
+                      >
+                        <small
+                          *ngIf="
+                            createUserForm.controls['email'].errors['required']
+                          "
+                          class="text-danger text-xs"
+                          >Enter email</small
+                        >
+                        <small
+                          *ngIf="
+                            createUserForm.controls['email'].errors['email']
+                          "
+                          class="text-danger text-xs"
+                          >Enter a valid email</small
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Department</legend>
+                        <select name="department" formControlName="department">
+                          <option value="Finance">
+                            Finance and Internal Control
+                          </option>
+                          <option value="IT">Information Technology</option>
+                          <option value="Operations">Operations</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Customer Service">
+                            Customer Service
+                          </option>
+                          <option value="Recovery">Recovery</option>
+                        </select>
+                      </fieldset>
+                      <ng-container
+                        *ngIf="
+                          (createUserForm.controls['department'].dirty ||
+                            createUserForm.controls['department'].touched) &&
+                          createUserForm.controls['department'].errors
+                        "
+                      >
+                        <small
+                          *ngIf="
+                            createUserForm.controls['department'].errors[
+                              'required'
+                            ]
+                          "
+                          class="text-danger text-xs"
+                          >Select department</small
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <ul class="main-tab-card nav nav-pills" id="myTab" role="tablist">
+          <li
+            class="nav-item me-2"
+            role="presentation"
+            *ngFor="let group of permissionGroups"
+          >
+            <button
+              class="nav-link"
+              [class.active]="group.name === 'Credit'"
+              [id]="group.name.toLowerCase() + '-tab'"
+              data-bs-toggle="tab"
+              [attr.data-bs-target]="'#' + group.name.toLowerCase()"
+              type="button"
+              [attr.aria-controls]="group.name.toLowerCase()"
+              aria-selected="true"
+            >
+              {{ group.name }}
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div
+            *ngFor="let group of permissionGroups"
+            class="tab-pane"
+            [class.active]="group.name === 'Credit'"
+            [id]="group.name.toLowerCase()"
+            role="tabpanel"
+            [attr.aria-labelledby]="group.name.toLowerCase() + '-tab'"
+            tabindex="0"
+          >
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class="bg-light text-capitalize">
+                      <th scope="col" class="col-6">Permissions</th>
+                      <th scope="col" class="col-6">Permissions</th>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let permission of group.permissions;
+                          let i = index
+                        "
+                      >
+                        <td *ngIf="i % 2 === 0">
+                          <div class="form-check form-switch">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              [checked]="isPermissionSelected(permission.value)"
+                              (change)="
+                                onPermissionChange($event, permission.value)
+                              "
+                            />
+                            <label class="form-check-label">{{
+                              permission.label
+                            }}</label>
+                          </div>
+                        </td>
+                        <td *ngIf="i % 2 !== 0">
+                          <div class="form-check form-switch">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              [checked]="isPermissionSelected(permission.value)"
+                              (change)="
+                                onPermissionChange($event, permission.value)
+                              "
+                            />
+                            <label class="form-check-label">{{
+                              permission.label
+                            }}</label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </loading-spinner>
+</div>

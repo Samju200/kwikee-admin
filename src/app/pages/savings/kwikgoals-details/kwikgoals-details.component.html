@@ -1,0 +1,638 @@
+<div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>View Kwik Goal</h4>
+        <p>View single kwik-goal details</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <loading-spinner style="min-height: 500px" [spinning]="loading">
+      <ng-container *ngIf="savingDetails; else showNoSaving">
+        <div class="row">
+          <div class="col-sm-12 mb-5">
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="p-1">
+                  <div class="d-flex py-2 my-1 align-items-center">
+                    <img style="border-radius: 100%;
+                      border: 0.5px solid black;
+                      object-fit: cover; overflow: hidden;"
+                      [src]="savingDetails.passport_link ? savingDetails.passport_link.link : 'https://via.placeholder.com/75'"
+                      alt="" width="75" height="75" (error)="onImgError($event)">
+                    <h5 class="ms-2">
+                      {{userDetails?.title}}&nbsp;{{userDetails?.firstname |
+                          titlecase}}&nbsp;{{userDetails?.lastname | titlecase}}
+                    </h5>
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-auto">
+                      <button (click)="cancelOrRejectSavings('cancel')" class="btn btn-sm btn-warning">Cancel</button>
+                    </div>
+                    <ng-container *ngIf="savingDetails.type == '2'">
+                      <div class="col-auto">
+                        <button class="btn btn-outline-dark btn-sm" (click)="openEditKwikGoalModal()">Edit Saving</button>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="savingDetails.type == '1'">
+                      <div class="col-auto">
+                        <button class="btn btn-outline-dark btn-sm" (click)="openKwikMaxModalForEdit('edit')">Edit Saving</button>
+                      </div>
+                      <div class="col-auto">
+                        <button class="btn btn-outline-dark btn-sm" (click)="openKwikMaxModalForEdit('confirm')">Confirm Saving</button>
+                      </div>
+                    </ng-container>
+                    <div class="col-auto">
+                      <button class="btn btn-outline-dark btn-sm" (click)="openExportTransactionsModal()">Export
+                        Transactions</button>
+                    </div>
+                  </div>
+                  <hr>
+                </div>
+                <div class="w-100 w-300 px-1">
+                  <h6 class="text-primary">User Details</h6>
+                  <div class="row my-3">
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        kwikee ID
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails?.reference}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        email address
+                      </dt>
+                      <dd class="text--500  text--deep-black text-break">
+                        {{userDetails?.email}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        phone number
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails?.telephone}}
+                      </dd>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        BVN
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails?.bvn ? userDetails?.bvn: 'N/A'}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        phone number
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails?.telephone}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        DOB
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{ userDetails?.dob? userDetails?.dob: 'N/A' }}
+                      </dd>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        User Pin
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails && userDetails.show_pin == 1? userDetails?.pin: '****'}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        bankname
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{(userDetails?.payment_bank_name?
+                            userDetails?.payment_bank_name: 'N/A') | titlecase}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        accountnumber
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{ userDetails?.payment_account_number?
+                            userDetails?.payment_account_number : 'N/A' }}
+                      </dd>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        Account Verification
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        <span *ngIf="userDetails?.verified == '1'" class="badge bg-success py-2 px-3">Verified</span>
+                        <span *ngIf="userDetails?.verified == '0'" class="badge bg-secondary py-2 px-3">Not Verified</span>
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        joined
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{userDetails?.created_at | date}}
+                      </dd>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="w-100 w-300 px-1">
+                  <h6 class="text-primary">Saving Details</h6>
+                  <div class="row my-3">
+                     <div class="col-md-4">
+                        <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                         target amount
+                        </dt>
+                        <dd class="text--500 text--deep-black text-break">
+                          {{(savingDetails?.target_amount ? savingDetails?.target_amount: 0) | currency: '₦'}}
+                        </dd>
+                      </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        Saving Balance
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{(savingDetails?.saving_balance ? savingDetails?.saving_balance: 0) | currency: '₦'}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        Interest Accrued
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{(savingDetails?.interest_balance ? savingDetails?.interest_balance: 0) | currency: '₦'}}
+                      </dd>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        Frequency
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{(savingDetails?.frequency ? savingDetails?.frequency : 'N/A') | titlecase}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        Maturity Date
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        {{(savingDetails?.maturity_date ? savingDetails?.maturity_date : 'N/A') | date}}
+                      </dd>
+                    </div>
+                    <div class="col-md-4">
+                      <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                        status
+                      </dt>
+                      <dd class="text--500 text--deep-black text-break">
+                        <span class="badge bg-secondary py-2 px-3">
+                          KwikGoals
+                        </span>
+                      </dd>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="card mb-4">
+                <div class="card-body">
+                  <div class="w-100 w-300 px-1">
+                    <h6 class="text-primary">Wallet Details</h6>
+                    <div class="row my-3">
+                        <div class="col-md-4">
+                          <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                            Account Name
+                          </dt>
+                          <dd class="text--500 text--deep-black text-break">
+                            {{savingsWallet?.account_name | titlecase}}
+                          </dd>
+                        </div>
+                      <div class="col-md-4">
+                        <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                          Account Number
+                        </dt>
+                        <dd class="text--500 text--deep-black text-break">
+                          {{savingsWallet?.account_number ? savingsWallet?.account_number: 0}}
+                        </dd>
+                      </div>
+                      <div class="col-md-4">
+                        <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                         Account Balance
+                        </dt>
+                        <dd class="text--500 text--deep-black text-break">
+                          {{(savingsWallet?.available_balance ? savingsWallet?.available_balance: 0) | currency: '₦'}}
+                        </dd>
+                      </div>
+                      <div class="col-md-4">
+                        <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                         Status
+                        </dt>
+                        <dd class="text--500 text--deep-black text-break">
+                          <span *ngIf="savingsWallet?.status == 'active'" class="badge bg-success py-2 px-3">Active</span>
+                          <span *ngIf="savingsWallet?.status == '0'" class="badge bg-secondary py-2 px-3">Not Active</span>
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+          </div>
+          <div class="col-sm-12">
+            <ul class="main-tab-card nav nav-pills" id="myTab" role="tablist">
+              <li class="nav-item me-2" role="presentation">
+                <button class="nav-link active" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions"
+                  type="button" role="tab" aria-controls="transactions" aria-selected="false">Transactions</button>
+              </li>
+              <!-- <li class="nav-item me-2" role="presentation">
+                <button class="nav-link" id="savings-tab" data-bs-toggle="tab" data-bs-target="#savings" type="button"
+                  role="tab" aria-controls="savings" aria-selected="false">Savings History</button>
+              </li> -->
+            </ul>
+  
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="transactions" role="tabpanel" aria-labelledby="transactions-tab" tabindex="0">
+               <div class="card mt-3">
+                  <div class="card-body mt-3">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead class="bg-light text-capitalize">
+                          <tr>
+                            <th scope="col">
+                              Date
+                            </th>
+                            <th scope="col">
+                              Amount
+                            </th>
+                            <th scope="col">
+                              Type
+                            </th>
+                            <th scope="col">
+                              Narration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngIf="loanTransactions && loanTransactions.length; else noTableData">
+                            <tr *ngFor="let item of loanTransactions">
+                              <td>
+                                {{item?.created_at | date}}
+                              </td>
+                              <td>
+                                {{item?.amount | currency: '₦'}}
+                              </td>
+                              <td>
+                                <span class="text-danger" *ngIf="item.type == 'D'">
+                                  Debit 
+                                </span>
+                                <span class="text-success" *ngIf="item.type == 'C'">
+                                  Credit 
+                                </span>
+                              </td>
+                              <td>
+                                {{item.narration}}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="savings" role="tabpanel" aria-labelledby="savings-tab" tabindex="0">
+                <div class="card mt-3">
+                  <div class="card-body mt-3">
+                    <div class="w-100 w-300 px-1">
+                      <ng-container *ngIf="savingsHistory; else showNodata">
+                        <div class="row my-3">
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                              start date
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break text-capitalize">
+                              {{savingsHistory.start_date? (savingsHistory.start_date | date): 'N/A'}}
+                            </dd>
+                          </div>
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                              maturity date
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break">
+                              {{savingsHistory.maturity_date? (savingsHistory.maturity_date | date): 'N/A'}}
+                            </dd>
+                          </div>
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                              deposit amount
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break">
+                              {{(savingsHistory.deposit_amount ? savingsHistory.deposit_amount: 0) | currency: '₦'}}
+                            </dd>
+                          </div>
+                        </div>
+                        <div class="row my-3">
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                             tenor
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break text-capitalize">
+                              {{savingsHistory.duration ? savingsHistory.duration + ' ' + 'days' : 'N/A'}}
+                            </dd>
+                          </div>
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                              estimated amount
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break">
+                              {{(savingsHistory.estimated_amount ? savingsHistory.estimated_amount : 0 )| currency: '₦'}}
+                            </dd>
+                          </div>
+                          <div class="col-md-4">
+                            <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                              interest accrued
+                            </dt>
+                            <dd class="text--500 text--deep-black text-break">
+                              {{(savingsHistory.interest_accrued ? savingsHistory.interest_accrued : 0) | currency: '₦' }}
+                            </dd>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </loading-spinner>
+  </div>
+  
+  
+  <ng-template #showNodata>
+    <tr>
+      <td colspan="100%">
+        <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+          <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+            </path>
+          </svg>
+          <span style="font-size: 14px">
+            No data
+          </span>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  
+  
+  <ng-template #noTableData>
+    <tr>
+      <td colspan="100%">
+        <div class="p-3 text-center">
+          No data
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  
+  
+  <ng-template #showNoSaving>
+    <div class="card">
+      <div class="card-body">
+        <div class="p-5 d-flex align-items-center flex-column justify-content-center" style="min-height: 500px;">
+          <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+            </path>
+          </svg>
+          <span style="font-size: 14px">
+            No savings found
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <div class="modal fade" id="editKwikGoalModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content card custom-modal">
+        <div class="card-body">
+          <i (click)="closeEditKwikGoalModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+          <h5 class="modal-title text-capitalize">Edit Kwik Goal</h5>
+          <div class="modal-body">
+            <form [formGroup]="editKwikGoalForm" action="">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Target Amount</legend>
+                      <input type="number" name="target_amount" formControlName="target_amount">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(editKwikGoalForm.controls['target_amount'].dirty || editKwikGoalForm.controls['target_amount'].touched) && editKwikGoalForm.controls['target_amount'].errors">
+                      <small *ngIf="editKwikGoalForm.controls['target_amount'].errors['required']"
+                        class="text-danger text-xs">Enter amount</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Preffered Saving Amount</legend>
+                      <input type="number" name="preffered_saving_amount" formControlName="preffered_saving_amount">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(editKwikGoalForm.controls['preffered_saving_amount'].dirty || editKwikGoalForm.controls['preffered_saving_amount'].touched) && editKwikGoalForm.controls['preffered_saving_amount'].errors">
+                      <small *ngIf="editKwikGoalForm.controls['preffered_saving_amount'].errors['required']"
+                        class="text-danger text-xs">Enter amount</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Start Date</legend>
+                      <input type="date" name="start_date" formControlName="start_date">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(editKwikGoalForm.controls['start_date'].dirty || editKwikGoalForm.controls['start_date'].touched) && editKwikGoalForm.controls['start_date'].errors">
+                      <small *ngIf="editKwikGoalForm.controls['start_date'].errors['required']" class="text-danger text-xs">Select date</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Maturity Date</legend>
+                      <input type="date" name="maturity_date" formControlName="maturity_date">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(editKwikGoalForm.controls['maturity_date'].dirty || editKwikGoalForm.controls['maturity_date'].touched) && editKwikGoalForm.controls['maturity_date'].errors">
+                      <small *ngIf="editKwikGoalForm.controls['maturity_date'].errors['required']" class="text-danger text-xs">Select date</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Savings Category</legend>
+                      <input type="text" name="savings_category" formControlName="savings_category">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(editKwikGoalForm.controls['savings_category'].dirty || editKwikGoalForm.controls['savings_category'].touched) && editKwikGoalForm.controls['savings_category'].errors">
+                      <small *ngIf="editKwikGoalForm.controls['savings_category'].errors['required']"
+                        class="text-danger text-xs">Please fill</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Savings Name</legend>
+                      <input type="text" name="savings_name" formControlName="savings_name">
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="handleEditKwikGoal()">
+                <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!isLoading">
+                  Save Changes
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="kwikMaxFormModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content card custom-modal">
+        <div class="card-body">
+          <i (click)="closeKwikMaxModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+          <h5 class="modal-title text-capitalize">{{kwikMaxAction}} KwikMax</h5>
+          <div class="modal-body">
+            <form [formGroup]="kwikMaxForm" action="">
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Deposit Amount</legend>
+                      <input type="number" name="deposit_amount" formControlName="deposit_amount">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(kwikMaxForm.controls['deposit_amount'].dirty || kwikMaxForm.controls['deposit_amount'].touched) && kwikMaxForm.controls['deposit_amount'].errors">
+                      <small *ngIf="kwikMaxForm.controls['deposit_amount'].errors['required']"
+                        class="text-danger text-xs">Enter amount</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-12 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Duration (months)</legend>
+                      <input type="number" name="duration" formControlName="duration">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(kwikMaxForm.controls['duration'].dirty || kwikMaxForm.controls['duration'].touched) && kwikMaxForm.controls['duration'].errors">
+                      <small *ngIf="kwikMaxForm.controls['duration'].errors['required']"
+                        class="text-danger text-xs">Enter duration in months</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-12 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Start Date</legend>
+                      <input type="date" name="start_date" formControlName="start_date">
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(kwikMaxForm.controls['start_date'].dirty || kwikMaxForm.controls['start_date'].touched) && kwikMaxForm.controls['start_date'].errors">
+                      <small *ngIf="kwikMaxForm.controls['start_date'].errors['required']" class="text-danger text-xs">Select date</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="handleEditOrConfirmKwikMax()">
+                <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!isLoading">
+                  {{kwikMaxAction == 'edit' ? 'Save Changes' : 'Confirm'}}
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="exportTransactionsModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content card custom-modal">
+        <div class="card-body">
+          <i (click)="closeExportTransactionsModal()" role="button" aria-label="Close"
+            class="ri-close-line close-modal"></i>
+          <h5 class="modal-title text-capitalize">Export Transactions</h5>
+          <div class="modal-body">
+            <form action="form-group">
+              <div class="position-relative pt-1 pb-4 mb-2">
+                <fieldset class="form-control mb-0">
+                  <legend>Document Type</legend>
+                  <select [formControl]="docTypeControl">
+                    <option value="1">Excel</option>
+                    <option value="2">PDF</option>
+                  </select>
+                </fieldset>
+                <ng-container
+                  *ngIf="(docTypeControl.dirty || docTypeControl.touched) && docTypeControl.errors">
+                  <small *ngIf="docTypeControl.errors['required']" class="text-danger text-xs">Select a type</small>
+                </ng-container>
+              </div>
+              <button type="button" [disabled]="isLoading" (click)="exportTransactions()"
+                class="btn btn-purple btn-block w-100">
+                <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!isLoading">
+                  Proceed
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

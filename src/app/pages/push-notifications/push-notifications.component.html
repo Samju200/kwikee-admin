@@ -1,0 +1,53 @@
+<div class="greetings-area mt-5">
+  <div class="row justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <h4>Send Notifications</h4>
+      <p>Send notifications to customers</p>
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <div class="row">
+   <div class="card">
+    <div class="card-body">
+      <div class="col-md-6 col-lg-5 mx-auto">
+        <div class="px-lg-4 px-md-4 px-0 my-5">
+          <div class="greetings-area mt-5 mb-4">
+            <p>Enter the title and message</p>
+          </div>
+          <form [formGroup]="sendNotificationsForm" (ngSubmit)="sendNotification()">
+            <div class="position-relative pt-1 pb-4">
+              <fieldset class="form-control">
+                <legend>Title</legend>
+                <input type="text" formControlName="title">
+              </fieldset>
+              <ng-container
+                *ngIf="(sendNotificationsForm.controls['title'].dirty || sendNotificationsForm.controls['title'].touched) && sendNotificationsForm.controls['title'].errors">
+                <small *ngIf="sendNotificationsForm.controls['title'].errors['required']" id="title-help"
+                  class="text-danger text-xs">Please enter title</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4">
+              <fieldset class="form-control">
+                <legend>Message</legend>
+                <textarea formControlName="message"></textarea>
+              </fieldset>
+              <ng-container
+                *ngIf="(sendNotificationsForm.controls['message'].dirty || sendNotificationsForm.controls['message'].touched) && sendNotificationsForm.controls['message'].errors">
+                <small *ngIf="sendNotificationsForm.controls['message'].errors['required']" id="message-help"
+                  class="text-danger text-xs">Please enter message</small>
+              </ng-container>
+            </div>
+            <button type="submit" [disabled]="loading" class="btn btn-purple w-100">
+              <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+             <span *ngIf="!loading">Send Notifications</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+</div>

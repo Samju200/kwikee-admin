@@ -1,0 +1,164 @@
+<div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Account Enquiry</h4>
+      </div>
+    </div>
+    <div class="mt-5">
+        <ng-container >
+          <div class="row">
+            <div class="col-sm-12 mb-2">
+              <div class="card mb-1">
+                <div class="card-body">
+                  <loading-spinner [spinning]="isLoading">
+                    <form action="">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <div class="position-relative pt-1 pb-4">
+                            <fieldset class="form-control">
+                              <legend>Validate Account Number</legend>
+                              <input type="text" maxlength="10"  (change)="validateInternalAccount()"  [(ngModel)]="accountNumber" [ngModelOptions]="{standalone: true}">
+                            </fieldset>
+                            <ng-container>
+                              <span *ngIf="loadSuccess == true"
+                                 id="customersId" class="text-s ml-3 mt-2 text-success">{{accountData?.account_name}} <i class="fa fa-check-circle text-success"></i></span>
+                              <span *ngIf="loading == true"
+                                  class="text-xs ml-3 mt-2 text-danger">Account not found <i class="fa fa-times-circle text-danger"> </i></span>
+                            </ng-container>
+                            <!-- <ng-container
+                              *ngIf="(EnquiryForm.controls['start'].dirty || EnquiryForm.controls['start'].touched) && EnquiryForm.controls['start'].errors">
+                              <small *ngIf="EnquiryForm.controls['start'].errors['required']" class="text-danger text-xs">Select
+                                start date</small>
+                            </ng-container> -->
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <form [formGroup]="EnquiryForm" (ngSubmit)="getAccountEnquiry()">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <div class="position-relative pt-1 pb-4">
+                            <fieldset class="form-control">
+                              <legend>Start Date</legend>
+                              <input type="date" formControlName="start_date">
+                            </fieldset>
+                            <ng-container
+                              *ngIf="(EnquiryForm.controls['start_date'].dirty || EnquiryForm.controls['start_date'].touched) && EnquiryForm.controls['start_date'].errors">
+                              <small *ngIf="EnquiryForm.controls['start_date'].errors['required']" class="text-danger text-xs">Select
+                                start date</small>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="position-relative pt-1 pb-4">
+                            <fieldset class="form-control">
+                              <legend>End Date</legend>
+                              <input type="date" formControlName="end_date">
+                            </fieldset>
+                            <ng-container
+                              *ngIf="(EnquiryForm.controls['end_date'].dirty || EnquiryForm.controls['end_date'].touched) && EnquiryForm.controls['end_date'].errors">
+                              <small *ngIf="EnquiryForm.controls['end_date'].errors['required']" class="text-danger text-xs">Select end
+                                date</small>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" [disabled]="loadSuccess == false" class="btn btn-purple p-3">
+                        <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <span >Submit</span>
+                      </button>
+                    </form>
+                  </loading-spinner>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+    </div>
+    <div class="mt-1">
+      <div class="row">
+        <div *ngIf="showTransactions;" class="col-md-12">
+          <div *ngIf="transactionsData" class="card">
+            <div class="card-body">
+              <div class="greetings-area my-2">
+                <div class="col">
+                  <h5>Transactions</h5>
+                </div>
+              </div>
+              <div *ngIf="transactions.length > 0">
+                
+                  <div class="py-2">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead class="bg-light text-uppercase">
+                          <tr>
+                            <th scope="col">Transaction ID</th>
+                            <th scope="col">Transaction Date</th>
+                            <th scope="col">Value Date</th>
+                            <th scope="col">Details</th>
+                            <th scope="col">Credits</th>
+                            <th scope="col">Debits</th>
+                            <th scope="col">Balance</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container >
+                            <tr *ngFor="let transaction of transactions;">
+                              <td>
+                                {{transaction?.reference_no}}
+                              </td>
+                              <td>
+                                {{transaction?.transaction_date}}
+                              </td>
+                              <td>
+                                {{transaction?.value_date}}
+                              </td>
+                              <td>
+                                {{transaction?.details | titlecase}}
+                              </td>
+                              <td>
+                                {{transaction?.transaction_type == 'C'? (transaction?.amount | currency:'₦'):''}}
+                              </td>
+                              <td>
+                                {{transaction?.transaction_type == 'D'? (transaction?.amount | currency:'₦'):''}}
+                              </td>
+                              <td>
+                                {{(transaction?.balance? transaction?.balance  : 0) | currency:'₦'}}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
+                      [itemsFrom]="allCustomersTableData?.from" [itemsEnd]="allCustomersTableData?.to"
+                      [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
+                    </kb-pagination> -->
+                  </div>
+              </div>
+              <div *ngIf="transactions.length == 0">
+                <tr>
+                  <td colspan="100%">
+                    <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+                      <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                      </svg>
+                      <span style="font-size: 14px">
+                        No data
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+

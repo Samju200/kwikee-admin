@@ -1,0 +1,577 @@
+<div class="greetings-area">
+  <div class="row justify-content-between mt-4">
+    <div class="col-md-6 col-lg-5">
+      <h4>Good day {{ user.first_name | titlecase }},</h4>
+      <p>How are you feeling today? Its great to have you here</p>
+    </div>
+    <!-- <div class="col-md-5 col-lg-auto mt-3 mt-md-0 mt-lg-0">
+      <div class="d-flex align-items-end justify-content-between">
+        <div>
+          <p class="pb-1">Total Wallet Balance</p>
+          <h5 class=" pb-0 mb-0 add-ellipsis"> NGN23,150.00</h5>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<div class="overview-area mt-5">
+  <loading-spinner [spinning]="isFetchingDashboard">
+    <ng-container *ngIf="dashboardData; else showNoDashboard">
+      <single-line-graph
+        [toolTipName]="'Disbursed'"
+        [seriesName]="'Disbursement in the last 7 days'"
+        [graphData]="graphData"
+      ></single-line-graph>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 Approved Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Account Verified</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Amount Withdrawn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="lastApproved && lastApproved.length; else showNodata"
+                >
+                  <tr *ngFor="let loan of lastApproved">
+                    <td>
+                      <a
+                        [routerLink]="['/credit/view', loan.loan_id]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.date_submitted
+                          ? loan.date_submitted
+                          : loan.created_at
+                        ) | date : "medium"
+                      }}</span>
+                    </td>
+                    <td>
+                      {{ loan.user.first_name | titlecase }}
+                      {{ loan.user.last_name | titlecase }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Verified</span
+                      >
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                      <span
+                        *ngIf="!loan.user.verified"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                    </td>
+                    <td>
+                      {{ loan.user.phone ? loan.user.phone : "N/A" }}
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.loan_amount ? loan.loan_amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.amount_withdrawn ? loan.amount_withdrawn : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 Pending Underwriting Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Account Verified</th>
+                  <th scope="col">Telephone</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Amount Withdrawn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    lastPendingUnderwriting && lastPendingUnderwriting.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let loan of lastPendingUnderwriting">
+                    <td>
+                      <a
+                        [routerLink]="['/credit/view', loan.loan_id]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.date_submitted
+                          ? loan.date_submitted
+                          : loan.created_at
+                        ) | date : "medium"
+                      }}</span>
+                    </td>
+                    <td>
+                      {{ loan.user.first_name | titlecase }}
+                      {{ loan.user.last_name | titlecase }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Verified</span
+                      >
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                      <span
+                        *ngIf="!loan.user.verified"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                    </td>
+                    <td>
+                      {{ loan.user.telephone ? loan.user.telephone : "N/A" }}
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.loan_amount ? loan.loan_amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.amount_withdrawn ? loan.amount_withdrawn : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 Declined Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Account Verified</th>
+                  <th scope="col">Telephone</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Amount Withdrawn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="lastDeclined && lastDeclined.length; else showNodata"
+                >
+                  <tr *ngFor="let loan of lastDeclined">
+                    <td>
+                      <a
+                        [routerLink]="['credit/view', loan.loan_id]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.date_submitted
+                          ? loan.date_submitted
+                          : loan.created_at
+                        ) | date : "medium"
+                      }}</span>
+                    </td>
+                    <td>
+                      {{ loan.user.firstname | titlecase }}
+                      {{ loan.user.lastname | titlecase }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Verified</span
+                      >
+                      <span
+                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                      <span
+                        *ngIf="!loan.user.verified"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Verified</span
+                      >
+                    </td>
+                    <td>
+                      {{ loan.user.telephone ? loan.user.telephone : "N/A" }}
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.loan_amount ? loan.loan_amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        (loan.amount_withdrawn ? loan.amount_withdrawn : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 Transactions</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">status</th>
+                  <th scope="col">user</th>
+                  <th scope="col">amount</th>
+                  <th scope="col">bank name</th>
+                  <th scope="col">account number</th>
+                  <th scope="col">narration</th>
+                  <th scope="col">transaction type</th>
+                  <th scope="col">transaction date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    lastTransactions && lastTransactions.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let transaction of lastTransactions">
+                    <td>
+                      <span
+                        *ngIf="transaction.processed == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Processed</span
+                      >
+                      <span
+                        *ngIf="transaction.processed == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Awaiting Processing</span
+                      >
+                    </td>
+                    <td>
+                      {{ transaction.user?.first_name }}
+                      {{ transaction.user?.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        (transaction.amount ? transaction.amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>{{ transaction.bankcode | bankName }}</td>
+                    <td>
+                      {{
+                        transaction.accountnumber
+                          ? transaction.accountnumber
+                          : "N/A"
+                      }}
+                    </td>
+                    <td>
+                      {{ transaction.narration }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="transaction.transaction_type == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Debit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '2'"
+                        class="badge bg-success py-2 px-3"
+                        >Credit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '3'"
+                        class="badge bg-danger py-2 px-3"
+                        >Debit (Failed)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '4'"
+                        class="badge bg-danger py-2 px-3"
+                        >Credit (Failed)</span
+                      >
+                    </td>
+                    <td>{{ transaction.created_at | date }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 KwikGoals Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">Target Amount</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Maturity Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="lastKwikgoals && lastKwikgoals.length; else showNodata"
+                >
+                  <tr *ngFor="let saving of lastKwikgoals">
+                    <td>
+                      <a
+                        [routerLink]="['/savings/view', saving.investmentid]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        saving.start_date ? (saving.start_date | date) : "Null"
+                      }}</span>
+                    </td>
+                    <td>
+                      {{
+                        (saving.target_amount ? saving.target_amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>
+                      {{ saving.user.first_name }} {{ saving.user.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        saving.maturity_date
+                          ? (saving.maturity_date | date)
+                          : "Null"
+                      }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 KwikLite Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="lastKwikLite && lastKwikLite.length; else showNodata"
+                >
+                  <tr *ngFor="let saving of lastKwikLite">
+                    <td>
+                      <a
+                        [routerLink]="['/savings/view', saving.investmentid]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      {{ saving.user.firstname }} {{ saving.user.lastname }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 KwikMax Applications</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">Deposit Amount</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Maturity Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="lastKwikMax && lastKwikMax.length; else showNodata"
+                >
+                  <tr *ngFor="let saving of lastKwikMax">
+                    <td>
+                      <a
+                        [routerLink]="['/savings/view', saving.investmentid]"
+                        class="btn btn-action"
+                        ><i class="ri-eye-line ri-xl"></i>View</a
+                      >
+                    </td>
+                    <td>
+                      <span class="text-blue-badge">{{
+                        saving.created_at ? (saving.created_at | date) : "Null"
+                      }}</span>
+                    </td>
+                    <td>
+                      {{
+                        (saving.amount ? saving.amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>
+                      {{ saving.user.first_name }} {{ saving.user.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        saving.maturity_date
+                          ? (saving.maturity_date | date)
+                          : "Null"
+                      }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </loading-spinner>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No data </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #showNoDashboard>
+  <div class="card mt-5">
+    <div class="card-body">
+      <div
+        class="p-5 d-flex align-items-center flex-column justify-content-center"
+        style="min-height: 500px"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No data found </span>
+      </div>
+    </div>
+  </div>
+</ng-template>

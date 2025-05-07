@@ -1,0 +1,364 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>KwikMax Rates</h4>
+        <p>Manage KwikMax rate ranges and their corresponding rates</p>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="openModal('create')">
+          <i class="ri-add-line"></i> Add New Rate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <loading-spinner [spinning]="loading">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light text-capitalize">
+                    <tr>
+                      <th scope="col">Start</th>
+                      <th scope="col">End</th>
+                      <th scope="col">Period Type</th>
+                      <th scope="col">Rate (%)</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="rates && rates.length; else showNoData"
+                    >
+                      <tr *ngFor="let rate of rates">
+                        <td>{{ rate.start }}</td>
+                        <td>{{ rate.end || "N/A" }}</td>
+                        <td>{{ rate.days_year }}</td>
+                        <td>{{ rate.rate | number : "1.2-2" }}</td>
+                        <td>
+                          <button
+                            class="btn btn-sm btn-outline-primary me-2"
+                            (click)="openModal('edit', rate)"
+                          >
+                            <i class="ri-edit-line"></i> Edit
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-danger"
+                            (click)="openModal('delete', rate)"
+                          >
+                            <i class="ri-delete-bin-line"></i> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </loading-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="showCreateModal"
+    [style.display]="showCreateModal ? 'block' : 'none'"
+  ></div>
+  <div
+    class="modal fade"
+    [class.show]="showCreateModal"
+    [style.display]="showCreateModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New KwikMax Rate</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form #createForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Start</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRate.start"
+                name="start"
+                required
+                min="1"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">End (optional)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRate.end"
+                name="end"
+                [min]="selectedRate.start + 1"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Period Type</label>
+              <select
+                class="form-control"
+                [(ngModel)]="selectedRate.days_year"
+                name="days_year"
+                required
+              >
+                <option value="days">Days</option>
+                <option value="years">Years</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rate (%)</label>
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="selectedRate.rate"
+                name="rate"
+                required
+                min="0"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!createForm.valid"
+            (click)="handleSubmit('create')"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div
+    class="modal fade"
+    [class.show]="showEditModal"
+    [style.display]="showEditModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit KwikMax Rate</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm" (ngSubmit)="handleSubmit('update')">
+            <div class="mb-3">
+              <label class="form-label">Start</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRate.start"
+                name="start"
+                required
+                min="1"
+                #startInput="ngModel"
+              />
+              <div
+                *ngIf="
+                  startInput.invalid && (startInput.dirty || startInput.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="startInput.errors?.['required']"
+                  >Start value is required</small
+                >
+                <small *ngIf="startInput.errors?.['min']"
+                  >Start must be at least 1</small
+                >
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">End (optional)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRate.end"
+                name="end"
+                [min]="selectedRate.start + 1"
+                #endInput="ngModel"
+              />
+              <div
+                *ngIf="endInput.invalid && endInput.touched"
+                class="text-danger"
+              >
+                <small *ngIf="endInput.errors?.['min']"
+                  >End must be greater than start</small
+                >
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Period Type</label>
+              <select
+                class="form-control"
+                [(ngModel)]="selectedRate.days_year"
+                name="days_year"
+                required
+                #daysYearInput="ngModel"
+              >
+                <option value="days">Days</option>
+                <option value="years">Years</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Rate (%)</label>
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="selectedRate.rate"
+                name="rate"
+                required
+                min="0"
+                #rateInput="ngModel"
+              />
+              <div
+                *ngIf="
+                  rateInput.invalid && (rateInput.dirty || rateInput.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="rateInput.errors?.['required']"
+                  >Rate is required</small
+                >
+                <small *ngIf="rateInput.errors?.['min']"
+                  >Rate must be 0 or higher</small
+                >
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!editForm.valid || loading"
+            (click)="editForm.valid && handleSubmit('update')"
+          >
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm"
+            ></span>
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete Confirmation Modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="showDeleteModal"
+    [style.display]="showDeleteModal ? 'block' : 'none'"
+  ></div>
+  <div
+    class="modal fade"
+    [class.show]="showDeleteModal"
+    [style.display]="showDeleteModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Deletion</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this KwikMax rate?</p>
+          <p><strong>Start:</strong> {{ selectedRate?.start }}</p>
+          <p><strong>End:</strong> {{ selectedRate?.end || "N/A" }}</p>
+          <p><strong>Period Type:</strong> {{ selectedRate?.days_year }}</p>
+          <p>
+            <strong>Rate:</strong> {{ selectedRate?.rate | number : "1.2-2" }}%
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="handleSubmit('delete')"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNoData>
+  <tr>
+    <td colspan="5">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No KwikMax rates found </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

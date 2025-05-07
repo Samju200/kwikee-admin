@@ -1,0 +1,80 @@
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face{
+  font-family: 'C-black';
+  src: url('../../assets/fonts/circular-std-font-family/CircularStd-Black.ttf');
+}
+@font-face{
+  font-family: 'C-bold';
+  src: url('../../assets/fonts/circular-std-font-family/CircularStd-Bold.ttf');
+}
+@font-face{
+  font-family: 'C-book';
+  src: url('../../assets/fonts/circular-std-font-family/CircularStd-Book.ttf');
+}
+@font-face{
+  font-family: 'C-medium';
+  src: url('../../assets/fonts/circular-std-font-family/CircularStd-Medium.ttf');
+}
+
+h1, h2{
+  font-family:'C-black';
+}
+h3, h4, h5{
+  font-family:'C-bold';
+}
+h5{
+  font-family:'C-Medium';
+}
+p, a{
+  font-family: 'C-book';
+}
+
+html,
+body {
+  font-family: 'C-book';
+  // font-family: 'Inter', sans-serif;
+}
+
+a {
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .85;
+    color: inherit;
+  }
+
+  &.btn:hover {
+    text-decoration: none;
+  }
+
+  // &:visited {
+  // }
+
+  &[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: .65;
+    cursor: not-allowed;
+  }
+}
+
+
+// input,
+// select,
+// textarea {
+//   font-family: inherit;
+//   border-image: none;
+//   outline: none;
+//   background: transparent;
+//   font-size: $font-size-regular;
+// }
+
+

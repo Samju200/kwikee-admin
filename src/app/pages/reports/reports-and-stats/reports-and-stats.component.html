@@ -1,0 +1,94 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Reports and Statistics</h4>
+        <p>View detailed reports and statistics</p>
+      </div>
+    </div>
+  </div>
+
+  <loading-spinner [spinning]="isFetchingData">
+    <div *ngIf="pageData; else showNoData">
+      <div class="mt-5">
+        <div class="row mb-5">
+          <div class="col-md-6 col-lg-3 mb-4" *ngFor="let card of loansData">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="pb-0 mb-0" style="font-size: 14px;">
+                  {{card.status == '-1' ? 'Incomplete Applications': card.status == '0' ? 'New Applications' : card.status == '1' ? 'Total Credit Offered' : card.status == '2' ? 'Amount withdrawn':  card.status == '3' ? 'Active Credit (Loan Book Value)' : card.status == '4' ? 'Performing Credit' : card.status == '5' ? 'Non-Performing Credit':  ''}}
+                </h5>
+                <small>{{(card.amount? card.amount: 0) | currency: '₦'}}</small>
+                <div class="d-flex align-items-center justify-content-between mt-4 pt-1">
+                  <h6>{{card.total | currency: ' ': 'symbol': '1.0-0' }} applications</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-md-6 col-lg-3 mb-4" *ngFor="let card of savingsData">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="pb-0 mb-0" style="font-size: 14px;">
+                  {{card.status == '1' ? 'KwikMax' : card.status == '4' ? 'Kwik Goals' : card.status == '5' ? 'KwikLite': card.status == '6' ? 'Cashbacks' : ''}}
+                </h5>
+                <small>{{(card.amount? card.amount: 0) | currency: '₦'}}</small>
+                <div class="d-flex align-items-center justify-content-between mt-4 pt-1">
+                  <h6>{{card.total | currency: ' ': 'symbol': '1.0-0'}} applications</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="pb-0 mb-0" style="font-size: 14px;">
+                  Wallet Total Positive Balance
+                </h5>
+                <div class="d-flex align-items-center justify-content-between mt-4 pt-1">
+                  <h6>{{walletData.total_positive_balance | currency: '₦': 'symbol': '1.0-0'}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="pb-0 mb-0" style="font-size: 14px;">
+                  Wallet Total Negative Balance
+                </h5>
+                <div class="d-flex align-items-center justify-content-between mt-4 pt-1">
+                  <h6>{{walletData.total_negative_balance | currency: '₦': 'symbol': '1.0-0'}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <single-line-graph [toolTipName]="'Total Savings'" [seriesName]="'Total Savings in last 12 Months'" [graphData]="totalSavingsLast12Months"></single-line-graph>
+        <single-line-graph [toolTipName]="'Loan Book'" [seriesName]="'Loan Book in last 12 Months'" [graphData]="loanBookLast12Months"></single-line-graph>
+        <single-line-graph [toolTipName]="'Revenue'" [seriesName]="'Revenue in last 12 Months'" [graphData]="revenueLast12Months"></single-line-graph>
+      </div>
+    </div>
+  </loading-spinner>
+</div>
+
+<ng-template #showNoData>
+  <div class="card mt-5">
+    <div class="card-body">
+      <div class="p-5 d-flex align-items-center flex-column justify-content-center" style="min-height: 500px;">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data found
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>

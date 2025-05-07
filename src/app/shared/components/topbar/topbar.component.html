@@ -1,0 +1,38 @@
+<div class="topbar py-3 sticky-top container-fluid">
+  <div class=" col-md-11 mx-auto ">
+    <div class="row">
+      <div class="order-lg-2 col-10 col-md-11 col-lg-3 ms-auto d-flex justify-content-lg-end">
+        <div class="dropdown">
+          <div class="profile" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+            data-bs-offset="10,20">
+            <div class="d-flex align-items-center justify-content-between">
+              <!-- <div class="avatar"><img src="/static/media/man.b20cef0b.png" alt="" class="w-100"></div> -->
+              <div class="mx-2">
+                <!-- <h6 class="add-ellipsis">Kwikee technologies</h6> -->
+                <p class="add-ellipsis m-0 text-capitalize">{{user.first_name}} {{user.last_name}}</p>
+              </div>
+            </div>
+            <span style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+              <i class="ri-arrow-drop-down-line ri-xl dropdown-toggle-closed"></i>
+              <i class="ri-arrow-drop-up-line ri-xl dropdown-toggle-open"></i>
+            </span>
+          </div>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li>
+              <a class="dropdown-item pro py-2 d-flex align-items-center" [routerLink]="['/change-password']" >
+                <i class="ri-key-line"></i>
+                <p class="ps-1 m-0">Change Password</p>
+              </a>
+            </li>
+            <li>
+              <a role="button" class="dropdown-item logout py-2 d-flex align-items-center" (click)="signOut()">
+                <i class="ri-logout-circle-line"></i>
+                <p class="ps-1 m-0">Log out</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

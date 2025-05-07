@@ -1,0 +1,610 @@
+<div class="greetings-area mt-5">
+  <div class="row align-items-center g-2">
+    <div class="col-md-6 col-lg-5">
+      <h4>View Team Member</h4>
+      <p>View single team member</p>
+    </div>
+    <div class="col-auto ms-auto">
+      <button [disabled]="loading" (click)="editUser()" class="btn btn-purple btn-lg py-2 px-3" type="button">
+        <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <span *ngIf="!loading">Save Changes</span>
+      </button>
+    </div>
+    <div class="col-auto">
+      <button [disabled]="loading" [routerLink]="['/teams']"  class="btn btn-outline-dark py-2 px-3" type="button">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <loading-spinner style="min-height: 500px" [spinning]="loading">
+    <div class="row">
+      <div class="col-sm-12 mb-5">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="px-1">
+              <form [formGroup]="editUserForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>First Name</legend>
+                        <input type="text" name="first_name" formControlName="first_name">
+                      </fieldset>
+                      <ng-container
+                        *ngIf="(editUserForm.controls['first_name'].dirty || editUserForm.controls['first_name'].touched) && editUserForm.controls['first_name'].errors">
+                        <small *ngIf="editUserForm.controls['first_name'].errors['required']"
+                          class="text-danger text-xs">Enter first name</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Last Name</legend>
+                        <input type="text" name="last_name"
+                          formControlName="last_name">
+                      </fieldset>
+                      <ng-container
+                        *ngIf="(editUserForm.controls['last_name'].dirty || editUserForm.controls['last_name'].touched) && editUserForm.controls['last_name'].errors">
+                        <small *ngIf="editUserForm.controls['last_name'].errors['required']"
+                          class="text-danger text-xs">Enter last name</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Email</legend>
+                        <input type="email" name="email" formControlName="email">
+                      </fieldset>
+                      <ng-container
+                        *ngIf="(editUserForm.controls['email'].dirty || editUserForm.controls['email'].touched) && editUserForm.controls['email'].errors">
+                        <small *ngIf="editUserForm.controls['email'].errors['required']"
+                          class="text-danger text-xs">Enter email</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="position-relative pt-1 pb-4 mb-2">
+                      <fieldset class="form-control mb-0">
+                        <legend>Department</legend>
+                        <select name="department" formControlName="department">
+                          <option value="Finance">Finance and Internal Control</option>
+                          <option value="IT">Information Technology</option>
+                          <option value="Operations">Operations</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Customer Service">Customer Service</option>
+                          <option value="Recovery">Recovery</option>
+                        </select>
+                      </fieldset>
+                      <ng-container
+                        *ngIf="(editUserForm.controls['department'].dirty || editUserForm.controls['department'].touched) && editUserForm.controls['department'].errors">
+                        <small *ngIf="editUserForm.controls['department'].errors['required']"
+                          class="text-danger text-xs">Select department</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <ul class="main-tab-card nav nav-pills" id="myTab" role="tablist">
+          <li class="nav-item me-2" role="presentation">
+            <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button"
+              role="tab" aria-controls="credit" aria-selected="true">Credit</button>
+          </li>
+          <li class="nav-item me-2" role="presentation">
+            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
+              type="button" role="tab" aria-controls="users" aria-selected="false">Admin</button>
+          </li>
+          <li class="nav-item me-2" role="presentation">
+            <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button"
+              role="tab" aria-controls="reports" aria-selected="false">Reports</button>
+          </li>
+          <li class="nav-item me-2" role="presentation">
+            <button class="nav-link" id="savings-tab" data-bs-toggle="tab" data-bs-target="#savings" type="button"
+              role="tab" aria-controls="savings" aria-selected="false">Savings</button>
+          </li>
+          <li class="nav-item me-2" role="presentation">
+            <button class="nav-link" id="utilities-tab" data-bs-toggle="tab" data-bs-target="#utilities" type="button"
+              role="tab" aria-controls="utilities" aria-selected="false">Utilities</button>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="credit" role="tabpanel" aria-labelledby="credit-tab" tabindex="0">
+            <div class="card mt-3">
+              <div class="card-body">
+               <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light text-capitalize">
+                    <th scope="col" class="col-6">Permissions</th>
+                    <th scope="col" class="col-6">Permissions</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loans/list')"
+                          (ngModelChange)="setPermission($event, 'loans/list')">
+                          <label class="form-check-label">List all Credit</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/one')"
+                          (ngModelChange)="setPermission($event, 'loan/one')">
+                          <label class="form-check-label">View one credit</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/cancel')"
+                          (ngModelChange)="setPermission($event, 'loan/cancel')">
+                          <label class="form-check-label">Cancel Application</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/reject')"
+                          (ngModelChange)="setPermission($event, 'loan/reject')">
+                          <label class="form-check-label">Reject Application</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/list/export')"
+                          (ngModelChange)="setPermission($event, 'loan/list/export')">
+                          <label class="form-check-label">Export Credit Report</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/approve')"
+                          (ngModelChange)="setPermission($event, 'loan/approve')">
+                          <label class="form-check-label">Approve Credit</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/antifraud/checklist')"
+                          (ngModelChange)="setPermission($event, 'loan/antifraud/checklist')">
+                          <label class="form-check-label">Perform Antifraud Checklist</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/underwriting/checklist')"
+                          (ngModelChange)="setPermission($event, 'loan/underwriting/checklist')">
+                          <label class="form-check-label">Perform Underwriting Checklist</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/paystack/charge')"
+                          (ngModelChange)="setPermission($event, 'loan/paystack/charge')">
+                          <label class="form-check-label">Charge Paystack Authorization</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/authorizarion/delete')"
+                          (ngModelChange)="setPermission($event, 'loan/authorizarion/delete')">
+                          <label class="form-check-label">Delete Paystack Authorization</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/authorization/request')"
+                          (ngModelChange)="setPermission($event, 'loan/authorization/request')">
+                          <label class="form-check-label">Request new Card Authorization</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/report')"
+                          (ngModelChange)="setPermission($event, 'loan/report')">
+                          <label class="form-check-label">Generate Loan Report</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/user/export')"
+                          (ngModelChange)="setPermission($event, 'loan/user/export')">
+                          <label class="form-check-label">Generate Users Export</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/users')"
+                          (ngModelChange)="setPermission($event, 'loan/users')">
+                          <label class="form-check-label">List Users</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/transactions/list')"
+                          (ngModelChange)="setPermission($event, 'loan/transactions/list')">
+                          <label class="form-check-label">List Transactions</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/credit/performance/check')"
+                          (ngModelChange)="setPermission($event, 'loan/credit/performance/check')">
+                          <label class="form-check-label">Check Credit Bureau credit performance</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/credit/report')"
+                          (ngModelChange)="setPermission($event, 'loan/credit/report')">
+                          <label class="form-check-label">Get Credit bureau credit report</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/repayment/add')"
+                          (ngModelChange)="setPermission($event, 'loan/repayment/add')">
+                          <label class="form-check-label">Add credit transaction</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/fullypaid/mark')"
+                          (ngModelChange)="setPermission($event, 'loan/fullypaid/mark')">
+                          <label class="form-check-label">Mark as fully paid</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('transaction/decline')"
+                          (ngModelChange)="setPermission($event, 'transaction/decline')">
+                          <label class="form-check-label">Decline Transaction</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('showuserpin')"
+                          (ngModelChange)="setPermission($event, 'showuserpin')">
+                          <label class="form-check-label">View User Pin</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/pending/underwriting')"
+                          (ngModelChange)="setPermission($event, 'loan/pending/underwriting')">
+                          <label class="form-check-label">Move to pending underwriting</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('user/one')"
+                          (ngModelChange)="setPermission($event, 'user/one')">
+                          <label class="form-check-label">View Single user</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('loan/edit')"
+                          (ngModelChange)="setPermission($event, 'loan/edit')">
+                          <label class="form-check-label">Edit Loan</label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+               </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="users" role="tabpanel" aria-labelledby="users-tab" tabindex="0">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class="bg-light text-capitalize">
+                      <th scope="col" class="col-6">Permissions</th>
+                      <th scope="col" class="col-6">Permissions</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" [ngModel]="isChecked('admin/account/create')"
+                            (ngModelChange)="setPermission($event, 'admin/account/create')">
+                            <label class="form-check-label">Create Admin</label>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" [ngModel]="isChecked('admin/account/underwriting/toggle')"
+                            (ngModelChange)="setPermission($event, 'admin/account/underwriting/toggle')">
+                            <label class="form-check-label">Mark as Underwriter</label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" [ngModel]="isChecked('admin/account/delete')"
+                            (ngModelChange)="setPermission($event, 'admin/account/delete')">
+                            <label class="form-check-label">Delete Admin</label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="reports" role="tabpanel" aria-labelledby="reports-tab" tabindex="0">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class="bg-light text-capitalize">
+                      <th scope="col" class="col-6">Permissions</th>
+                      <th scope="col" class="col-6">Permissions</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" [ngModel]="isChecked('report')"
+                            (ngModelChange)="setPermission($event, 'report')">
+                            <label class="form-check-label">View Reports</label>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" [ngModel]="isChecked('report-stats')"
+                            (ngModelChange)="setPermission($event, 'report-stats')">
+                            <label class="form-check-label">View Reports & Stats</label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="savings" role="tabpanel" aria-labelledby="savings-tab" tabindex="0">
+            <div class="card mt-3">
+              <div class="card-body">
+               <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light text-capitalize">
+                    <th scope="col" class="col-6">Permissions</th>
+                    <th scope="col" class="col-6">Permissions</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/list')"
+                          (ngModelChange)="setPermission($event, 'savings/list')">
+                          <label class="form-check-label">List Savings</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/one')"
+                          (ngModelChange)="setPermission($event, 'savings/one')">
+                          <label class="form-check-label">View one saving</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cancel')"
+                          (ngModelChange)="setPermission($event, 'savings/cancel')">
+                          <label class="form-check-label">Cancel Savings</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/kwikgoals/edit')"
+                          (ngModelChange)="setPermission($event, 'savings/kwikgoals/edit')">
+                          <label class="form-check-label">Edit Kwikgoal</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/kwikmax/edit')"
+                          (ngModelChange)="setPermission($event, 'savings/kwikmax/edit')">
+                          <label class="form-check-label">Edit Kwikmax</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/kwikmax/confirm')"
+                          (ngModelChange)="setPermission($event, 'savings/kwikmax/confirm')">
+                          <label class="form-check-label">Confirm Kwikmax</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/paystack/charge')"
+                          (ngModelChange)="setPermission($event, 'savings/paystack/charge')">
+                          <label class="form-check-label">Charge Paystack Authorization for Savings</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/list')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/list')">
+                          <label class="form-check-label">List Cashbacks</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/one')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/one')">
+                          <label class="form-check-label">View One Cashback</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/approve')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/approve')">
+                          <label class="form-check-label">Approve Cashback</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/cancel')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/cancel')">
+                          <label class="form-check-label">Cancel Cashback</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/close')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/close')">
+                          <label class="form-check-label">Close Cashback</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('savings/cashback/transaction/add')"
+                          (ngModelChange)="setPermission($event, 'savings/cashback/transaction/add')">
+                          <label class="form-check-label">Add Cashback Transaction</label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+               </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="utilities" role="tabpanel" aria-labelledby="utilities-tab" tabindex="0">
+            <div class="card mt-3">
+              <div class="card-body">
+               <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light text-capitalize">
+                    <th scope="col" class="col-6">Permissions</th>
+                    <th scope="col" class="col-6">Permissions</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('user/account/beneficiary/add')"
+                          (ngModelChange)="setPermission($event, 'user/account/beneficiary/add')">
+                          <label class="form-check-label">Add Beneficiary Account</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('transaction/fraud/unmark')"
+                          (ngModelChange)="setPermission($event, 'transaction/fraud/unmark')">
+                          <label class="form-check-label">Mark/Unmark as fraud</label>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('account/blacklist')"
+                          (ngModelChange)="setPermission($event, 'account/blacklist')">
+                          <label class="form-check-label">Blacklist Customer</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('account/watchlist')"
+                          (ngModelChange)="setPermission($event, 'account/watchlist')">
+                          <label class="form-check-label">Watchlist Customer</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('company/delete')"
+                          (ngModelChange)="setPermission($event, 'company/delete')">
+                          <label class="form-check-label">Delete Company</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('company/edit')"
+                          (ngModelChange)="setPermission($event, 'company/edit')">
+                          <label class="form-check-label">Edit Company</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" [ngModel]="isChecked('sector/edit')"
+                          (ngModelChange)="setPermission($event, 'sector/edit')">
+                          <label class="form-check-label">Edit Sector</label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+               </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </loading-spinner>
+</div>

@@ -1,0 +1,75 @@
+<div *ngIf="_totalItems > 0" class="d-flex align-items-center justify-content-center gap-x-2">
+  <span class="text-sm">
+    Showing <strong>{{itemsFrom}}</strong> to <strong>{{itemsEnd}}</strong> of <strong>{{_totalItems}}</strong> entries
+  </span>
+  <div class="kb-pagination my-2 mx-3">
+    <div class="d-flex align-items-center">
+      <div (click)="moveBackward()" class="kb-pagination__nav kb-pagination__nav--back rounded hover:bg-gray-100">
+        <svg style="width: 1.25rem; height: 1.25rem" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="kb-pagination__pages">
+        <span class="kb-pagination__page" [ngClass]="{'kb-pagination__page--active':currentPage==page1}"
+          (click)="paginate(page1,1)">
+          {{page1}}
+        </span>
+        <div (click)="paginate(page2,2)" *ngIf="overflowLeft" class="kb-pagination__more">
+          <svg style="width: 1.25rem; height: 1.25rem" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
+            </path>
+          </svg>
+        </div>
+        <span *ngIf="largestPageNumber>=2" (click)="paginate(page2,2)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page2}" class="kb-pagination__page hover:bg-gray-100">
+          {{page2}}
+        </span>
+        <span *ngIf="largestPageNumber>=3" (click)="paginate(page3,3)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page3}" class="kb-pagination__page hover:bg-gray-100">
+          {{page3}}
+        </span>
+        <span *ngIf="largestPageNumber>=4" (click)="paginate(page4,4)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page4}" class="kb-pagination__page hover:bg-gray-100">
+          {{page4}}
+        </span>
+        <span *ngIf="largestPageNumber>=5" (click)="paginate(page5,5)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page5}" class="kb-pagination__page hover:bg-gray-100">
+          {{page5}}
+        </span>
+        <span *ngIf="largestPageNumber>=6" (click)="paginate(page6,6)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page6}" class="kb-pagination__page hover:bg-gray-100">
+          {{page6}}
+        </span>
+        <div (click)="paginate(page6,6)" *ngIf="overflowRight" class="kb-pagination__more">
+          <svg style="width: 1.25rem; height: 1.25rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
+            </path>
+          </svg>
+        </div>
+        <span *ngIf="overflowLeft || overflowRight" (click)="paginate(page7,7)"
+          [ngClass]="{'kb-pagination__page--active':currentPage==page7}" class="kb-pagination__page hover:bg-gray-100">
+          {{page7}}
+        </span>
+      </div>
+      <div (click)="moveForward()" class="kb-pagination__nav kb-pagination__nav--forward rounded hover:bg-gray-100">
+        <svg style="width: 1.25rem; height: 1.25rem" fill="currentColor" viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+    </div>
+    <select name="itemPerPage" (ngModelChange)="changePageSize($event)" [(ngModel)]="itemPerPage" class="form-control" id="">
+      <option [value]="15">15/page</option>
+      <option [value]="50">50/page</option>
+      <option [value]="100">100/page</option>
+      <option [value]="500">500/page</option>
+    </select>
+  </div>
+</div>

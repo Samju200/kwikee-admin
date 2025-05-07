@@ -1,0 +1,58 @@
+<div class="auth">
+  <div class="login-area">
+    <div class="col-md-6 col-lg-5 mx-auto  py-5">
+      <!-- <div class="text-center mb-4"><img src="https://myidentitypass.com/assets/LOGO%20(3).png" class="w-50 " alt="">
+      </div> -->
+      <div class="card px-lg-4 px-md-4 px-0 mt-5">
+        <div class="card-body ">
+          <div class="greetings-area mt-5 mb-4">
+            <h4>Welcome to Kwikee </h4>
+            <p>Kindly fill in your details to sign into your account</p>
+          </div>
+          <form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+           <div class="position-relative pt-1 pb-4">
+            <fieldset class="form-control">
+              <legend>Enter Your Email</legend>
+              <input placeholder="john@doe.com" name="nothing" autocomplete="email" formControlName="email" type="email" class="w-100">
+            </fieldset>
+            <ng-container
+              *ngIf="(formControls['email'].dirty || formControls['email'].touched) && formControls['email'].errors">
+              <small *ngIf="formControls['email'].errors['required'] && formControls['email'].errors['required']"
+                class="text-danger text-xs">Valid email address is required</small>
+            </ng-container>
+           </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Password</legend>
+                <div class="d-flex align-items-center">
+                  <input placeholder="******" name="nothing" autocomplete="current-password" formControlName="password" [type]="showPassword ? 'text' : 'password'" class="w-100"
+                    >
+                  <span role="button" (click)="showPassword =! showPassword"
+                    style="font-weight: 900; cursor: pointer; padding-bottom: 10px;">
+                    <i [class]="showPassword ? 'ri-eye-off-line' : 'ri-eye-line'"></i> </span></div>
+              </fieldset>
+              <ng-container
+                *ngIf="(formControls['password'].dirty || formControls['password'].touched) && formControls['password'].errors">
+                <small *ngIf="formControls['password'].errors['required']" class="text-danger text-xs">Password is
+                  required</small>
+                <small *ngIf="formControls['password'].errors['incorrect']" class="text-danger text-xs">Email/Password
+                  incorrect</small>
+              </ng-container>
+            </div>
+            <div class="row mb-4 justify-content-end">
+              <div class="col-5 d-flex justify-content-end"><a class="link link-underline" href="/">Reset
+                  Password</a></div>
+            </div>
+            <button [disabled]="isLoading" class="btn btn-purple w-100 my-5" type="submit">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!isLoading">Login</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

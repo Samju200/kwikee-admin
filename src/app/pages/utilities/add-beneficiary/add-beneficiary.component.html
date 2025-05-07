@@ -1,0 +1,67 @@
+<div class="greetings-area mt-5">
+  <div class="row justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <h4>Add Beneficiary Account</h4>
+      <!-- <p>Send notifications to customers</p> -->
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <div class="row">
+   <div class="card">
+    <div class="card-body">
+      <div class="col-md-6 col-lg-5 mx-auto">
+        <div class="px-lg-4 px-md-4 px-0 my-5">
+          <div class="greetings-area mt-5 mb-4">
+            <p>Please fill form to continue</p>
+          </div>
+          <form [formGroup]="addBeneficiaryForm" (ngSubmit)="addBeneficiary()">
+            <div class="position-relative pt-1 pb-4">
+              <fieldset class="form-control">
+                <legend>Email</legend>
+                <input type="email" name="email" formControlName="email">
+              </fieldset>
+              <ng-container
+                *ngIf="(addBeneficiaryForm.controls['email'].dirty || addBeneficiaryForm.controls['email'].touched) && addBeneficiaryForm.controls['email'].errors">
+                <small *ngIf="addBeneficiaryForm.controls['email'].errors['required']"
+                  class="text-danger text-xs">Please enter email</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4">
+              <fieldset class="form-control">
+                <legend>Bank Name</legend>
+                <select name="bankcode" formControlName="bankcode">
+                  <option selected disabled [value]="null">Select Bank</option>
+                  <option *ngFor="let bank of banks" [value]="bank.code">{{bank.name}}</option>
+              </select>
+              </fieldset>
+              <ng-container
+                *ngIf="(addBeneficiaryForm.controls['bankcode'].dirty || addBeneficiaryForm.controls['bankcode'].touched) && addBeneficiaryForm.controls['bankcode'].errors">
+                <small *ngIf="addBeneficiaryForm.controls['bankcode'].errors['required']"
+                  class="text-danger text-xs">Please select bank</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4">
+              <fieldset class="form-control">
+                <legend>Account Number</legend>
+                <input type="tel" name="accountnumber" formControlName="accountnumber">
+              </fieldset>
+              <ng-container
+                *ngIf="(addBeneficiaryForm.controls['accountnumber'].dirty || addBeneficiaryForm.controls['accountnumber'].touched) && addBeneficiaryForm.controls['accountnumber'].errors">
+                <small *ngIf="addBeneficiaryForm.controls['accountnumber'].errors['required']"
+                  class="text-danger text-xs">Please enter account number</small>
+              </ng-container>
+            </div>
+            <button type="submit" [disabled]="loading" class="btn btn-purple w-100">
+              <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+             <span *ngIf="!loading">Add Account</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+</div>

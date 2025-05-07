@@ -1,0 +1,234 @@
+<nav class="sidebar">
+  <div class="header py-2 py-md-3 py-lg-3 mx-auto">
+    <a class="link dashy-logo" href="/"> <h5 class="logo">KwiKee</h5> </a
+    ><button class="btn btn-expand d-lg-none">
+      <span><i class="ri-bar-chart-horizontal-line"></i></span>
+    </button>
+  </div>
+  <div class="navigation mt-5 d-none d-lg-block">
+    <h6>HOME</h6>
+    <ul>
+      <!-- <a class="link" href="/Get-Started">
+        <li><span><i class="ri-add-line"></i>Get Started</span></li>
+      </a> -->
+      <a class="link" [routerLink]="['/dashboard']" routerLinkActive="active">
+        <li>
+          <span><i class="ri-home-5-line"></i>Dashboard</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/add-beneficiary']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-account-pin-box-line"></i>Add Beneficiary</span>
+        </li>
+      </a>
+    </ul>
+    <h6>YOUR BUSINESS INSIGHTS</h6>
+    <ul>
+      <a class="link" [routerLink]="['/credit']" routerLinkActive="active">
+        <li>
+          <span><i class="ri-wallet-line"></i>Credit</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/credit-score-ranges']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-line-chart-line"></i>Credit Score Ranges</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/kwikmax-rates']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-percent-line"></i>KwikMax Rates</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/transactions']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-briefcase-2-line"></i>Transactions</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        style="cursor: pointer"
+        data-bs-toggle="collapse"
+        href="#collapseExample"
+      >
+        <li
+          [ngClass]="{
+            act:
+              reportsChild1RLA.isActive ||
+              reportsChild2RLA.isActive ||
+              reportsChild3RLA.isActive
+          }"
+        >
+          <span
+            ><i class="ri-bank-line"></i>Savings<i
+              class="ri-arrow-drop-down-line ms-4"
+            ></i
+          ></span>
+        </li>
+      </a>
+      <ul>
+        <div class="collapse font ms-3" id="collapseExample">
+          <a
+            class="link-drop"
+            #reportsChild1RLA="routerLinkActive"
+            [routerLink]="['/savings/kwik-max']"
+            routerLinkActive="active"
+          >
+            <li class="sidebar-down">
+              <span><i class="ri-wallet-2-line"></i>Kwik Max</span>
+            </li>
+          </a>
+          <a
+            class="link-drop"
+            #reportsChild2RLA="routerLinkActive"
+            [routerLink]="['/savings/kwik-goal']"
+            routerLinkActive="active"
+          >
+            <li class="sidebar-down">
+              <span><i class="ri-wallet-3-fill"></i>Kwik Goals</span>
+            </li>
+          </a>
+          <a
+            class="link-drop"
+            #reportsChild3RLA="routerLinkActive"
+            [routerLink]="['/savings/kwik-lite']"
+            routerLinkActive="active"
+          >
+            <li class="sidebar-down">
+              <span><i class="ri-wallet-2-fill"></i>Kwik Lite</span>
+            </li>
+          </a>
+        </div>
+      </ul>
+      <a class="link" [routerLink]="['/customers']" routerLinkActive="active">
+        <li>
+          <span><i class="ri-team-line"></i>Customers</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/account-enquiry']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-briefcase-2-line"></i>Account Enquiry</span>
+        </li>
+      </a>
+    </ul>
+    <h6>REPORTS</h6>
+    <ul>
+      <a
+        class="link"
+        [routerLink]="['/reports/loans']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-focus-2-line"></i>Loans Reports</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/reports/users']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-focus-2-line"></i>Users Reports</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/reports/referrals']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-line-chart-line"></i>Referrals</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/reports/full-stats']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-line-chart-line"></i>Reports & Statistics</span>
+        </li>
+      </a>
+    </ul>
+    <h6>EXTRA</h6>
+    <ul>
+      <a
+        class="link"
+        [routerLink]="['/companies']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <li>
+          <span><i class="ri-building-2-line"></i>Companies</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/companies/pending']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-building-2-line"></i>Pending Companies</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/companies/blacklisted']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-building-2-line"></i>Blacklisted Companies</span>
+        </li>
+      </a>
+      <a class="link" [routerLink]="['/sectors']" routerLinkActive="active">
+        <li>
+          <span><i class="ri-building-2-line"></i>Sectors</span>
+        </li>
+      </a>
+      <a
+        class="link"
+        [routerLink]="['/send-notifications']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-notification-3-line"></i>Send Notifications</span>
+        </li>
+      </a>
+    </ul>
+    <h6>SETTINGS</h6>
+    <ul>
+      <a class="link" [routerLink]="['/teams']" routerLinkActive="active">
+        <li>
+          <span><i class="ri-stock-line"></i>Teams</span>
+        </li> </a
+      ><a
+        class="link"
+        [routerLink]="['/change-password']"
+        routerLinkActive="active"
+      >
+        <li>
+          <span><i class="ri-key-line"></i>Change Password</span>
+        </li>
+      </a>
+    </ul>
+  </div>
+</nav>

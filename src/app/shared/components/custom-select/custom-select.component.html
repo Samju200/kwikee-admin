@@ -1,0 +1,43 @@
+<div tabindex="-1" style="cursor: pointer; position: relative;" (click)="onFocus()">
+  <div *ngIf="selectedItem; else defaultPlaceholder">
+    <div class="select-item">
+      {{selectedItem?.company_name}}
+    </div>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+    class="bi bi-chevron-down select-caret" viewBox="0 0 16 16">
+    <path fill-rule="evenodd"
+      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+  </svg>
+</div>
+<ng-container *ngIf="showDropdown">
+  <div class="select-dropdown" clickOutside (clickedOutside)="closeDropDown()">
+    <div class="select-header">
+      <div>
+        <input placeholder="Type to search" style="border: 1px solid #ced4da !important;" [(ngModel)]="searchText" (ngModelChange)="searchItems($event)" [ngModelOptions]="{standalone: true}" type="text" class="form-control m-0
+        px-3
+        py-1.5">
+      </div>
+    </div>
+    <div style="overflow: auto; max-height: 200px;">
+      <ul role="listbox" class="select-items">
+        <li *ngFor="let item of items | searchFilter: searchText: 'company_name'"  (click)="showSelected(item)"
+          role="option" [ngClass]="{'selected': selectedItem?.company_id == item.company_id}" class="select-option">
+          <div class="select-item">
+            <!-- <img [src]="item.flag" class="flag" alt=""> -->
+            <div>
+              {{item.company_name}}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #defaultPlaceholder>
+
+  <div class="select-item">
+    &nbsp;
+  </div>
+</ng-template>

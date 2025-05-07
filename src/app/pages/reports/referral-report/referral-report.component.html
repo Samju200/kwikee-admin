@@ -1,0 +1,104 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Referral Codes</h4>
+        <p>View all active referrals eligible for bonus</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>Recent Referral Code</h5>
+                <p>View active referral code</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="row mt-2 mb-4 align-items-end">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchLoans($event)"></search-input>
+                    </div>
+                    <div *ngIf="setOfCheckedId.size > 0" class="col-auto">
+                      <button type="button" class="btn btn-purple py-2 px-3" style="font-size: 14px;" (click)="payCustomers()">Pay Customer</button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th style="font-size: 12px !important;" scope="col">
+                            <input [(ngModel)]="allChecked || indeterminate" (ngModelChange)="onAllChecked($event)" class="form-check-input" type="checkbox" value="" id="tableHead">
+                          </th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Kwikee ID</th>
+                          <th scope="col">Email</th>
+                          <!-- <th scope="col">Referred</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="allReferralCodesData && allReferralCodesData.length; else showNodata">
+                          <tr *ngFor="let customer of allReferralCodesData">
+                            <td>
+                              <div class="form-check">
+                                <input name="checkbox" [ngModel]="setOfCheckedId.has(customer.referral_code)" (ngModelChange)="onItemChecked(customer.referral_code, $event)" class="form-check-input" type="checkbox" value="" id="tableBody">
+                              </div>
+                            </td>
+                            <td>
+                              {{customer.firstname | titlecase}} {{customer.lastname | titlecase}}
+                            </td>
+                            <td>
+                              {{customer.referral_code}}
+                            </td>
+                            <td>
+                              {{customer.email}}
+                            </td>
+                            <!-- <td>
+                              <div class="row">
+                                <a href="" class="col-auto" *ngFor="let refer of customer.refers">
+                                  {{refer.}}
+                                </a>
+                              </div>
+                            </td> -->
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
+                    [itemsFrom]="allReferralCodesTableData?.from" [itemsEnd]="allReferralCodesTableData?.to"
+                    [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

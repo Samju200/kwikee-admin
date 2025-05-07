@@ -1,0 +1,305 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Credit Score Ranges</h4>
+        <p>Manage credit score ranges and their corresponding amounts</p>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="openModal('create')">
+          <i class="ri-add-line"></i> Add New Range
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <loading-spinner [spinning]="loading">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light text-capitalize">
+                    <tr>
+                      <th scope="col">Min Score</th>
+                      <th scope="col">Max Score</th>
+                      <th scope="col">Credit Amount</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        creditScoreRanges && creditScoreRanges.length;
+                        else showNoData
+                      "
+                    >
+                      <tr *ngFor="let range of creditScoreRanges">
+                        <td>{{ range.min_score }}</td>
+                        <td>{{ range.max_score || "N/A" }}</td>
+                        <td>
+                          {{
+                            range.credit_amount
+                              | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>
+                          <button
+                            class="btn btn-sm btn-outline-primary me-2"
+                            (click)="openModal('edit', range)"
+                          >
+                            <i class="ri-edit-line"></i> Edit
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-danger"
+                            (click)="openModal('delete', range)"
+                          >
+                            <i class="ri-delete-bin-line"></i> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </loading-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="showCreateModal"
+    [style.display]="showCreateModal ? 'block' : 'none'"
+  ></div>
+  <div
+    class="modal fade"
+    [class.show]="showCreateModal"
+    [style.display]="showCreateModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New Credit Score Range</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form #createForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Min Score</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRange.min_score"
+                name="min_score"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Max Score (optional)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRange.max_score"
+                name="max_score"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Credit Amount</label>
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="selectedRange.credit_amount"
+                name="credit_amount"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!createForm.valid"
+            (click)="handleSubmit('create')"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="showEditModal"
+    [style.display]="showEditModal ? 'block' : 'none'"
+  ></div>
+  <div
+    class="modal fade"
+    [class.show]="showEditModal"
+    [style.display]="showEditModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Credit Score Range</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Min Score</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRange.min_score"
+                name="min_score"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Max Score (optional)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="selectedRange.max_score"
+                name="max_score"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Credit Amount</label>
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="selectedRange.credit_amount"
+                name="credit_amount"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!editForm.valid"
+            (click)="handleSubmit('update')"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="showDeleteModal"
+    [style.display]="showDeleteModal ? 'block' : 'none'"
+  ></div>
+  <div
+    class="modal fade"
+    [class.show]="showDeleteModal"
+    [style.display]="showDeleteModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Deletion</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this credit score range?</p>
+          <p><strong>Min Score:</strong> {{ selectedRange?.min_score }}</p>
+          <p>
+            <strong>Max Score:</strong> {{ selectedRange?.max_score || "N/A" }}
+          </p>
+          <p>
+            <strong>Amount:</strong>
+            {{
+              selectedRange?.credit_amount | currency : "₦" : "symbol" : "1.2"
+            }}
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="handleSubmit('delete')"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNoData>
+  <tr>
+    <td colspan="4">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No credit score ranges found </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

@@ -1,0 +1,53 @@
+<div class="greetings-area mt-5">
+  <div class="row justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <h4>Loans Report</h4>
+      <p>Export loans report</p>
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <div class="col-md-6 col-lg-5 mx-auto">
+          <div class="px-lg-4 px-md-4 px-0 my-5">
+            <div class="greetings-area mt-5 mb-4">
+              <p>Select start and end dates</p>
+            </div>
+            <form [formGroup]="reportsForm" (ngSubmit)="exportReports()">
+              <div class="position-relative pt-1 pb-4">
+                <fieldset class="form-control">
+                  <legend>Start Date</legend>
+                  <input type="date" formControlName="start">
+                </fieldset>
+                <ng-container
+                  *ngIf="(reportsForm.controls['start'].dirty || reportsForm.controls['start'].touched) && reportsForm.controls['start'].errors">
+                  <small *ngIf="reportsForm.controls['start'].errors['required']" class="text-danger text-xs">Select
+                    start date</small>
+                </ng-container>
+              </div>
+              <div class="position-relative pt-1 pb-4">
+                <fieldset class="form-control">
+                  <legend>End Date</legend>
+                  <input type="date" formControlName="end">
+                </fieldset>
+                <ng-container
+                  *ngIf="(reportsForm.controls['end'].dirty || reportsForm.controls['end'].touched) && reportsForm.controls['end'].errors">
+                  <small *ngIf="reportsForm.controls['end'].errors['required']" class="text-danger text-xs">Select end
+                    date</small>
+                </ng-container>
+              </div>
+              <button type="submit" [disabled]="loading" class="btn btn-purple w-100">
+                <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!loading">Export</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

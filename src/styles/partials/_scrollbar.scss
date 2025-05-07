@@ -1,0 +1,24 @@
+
+/* Designing for scroll-bar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f7f7f7;
+    // border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #1633a3;
+    // border-radius: 5px;
+}
+
+// /* Handle on hover */
+// ::-webkit-scrollbar-thumb:hover {
+//     background: $color-ash;
+//     transform: scaleX(1.5);
+// }

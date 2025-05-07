@@ -1,0 +1,348 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row g-2">
+      <div class="col-md-6 col-lg-5">
+        <h4>Pending Companies</h4>
+        <p>View all your Pending Companies</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>All Companies</h5>
+                <p>View all Pending Companies</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loadingCompanies">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchCompanies($event)"></search-input>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col" [width]="'30%'">Company Name</th>
+                          <th scope="col">Pay Date</th>
+                          <th scope="col">Company ID</th>
+                          <th scope="col">Sector Code</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="companiesData.length; else showNodata">
+                          <tr *ngFor="let company of companiesData">
+                            <td>
+                              <div class="row g-2">
+                                <div class="col-auto">
+                                  <button (click)="openApprovalModalDetails(company.company_id, company.id)"
+                                    class="btn btn-sm btn-action" type="button">
+                                    <i class="ri-edit-line"></i>View
+                                  </button>
+                                </div>
+                                <div class="col-auto">
+                                  <button (click)="openDeclineCompanyModal(company.id)" class="btn btn-danger">
+                                    <i class="ri-delete-bin-4-line"></i>Decline
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{{company.company_name || '-'}}</td>
+                            <td>{{company.payday || '-'}}</td>
+                            <td>{{company.company_id || '-'}}</td>
+                            <td>{{company.sector_code || '-'}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
+                  [itemsFrom]="allCompaniesTableData?.from" [itemsEnd]="allCompaniesTableData?.to"
+                  [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
+                </kb-pagination> -->
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<div class="modal fade" id="declineCompanyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeDeclineCompanyModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">
+          Decline Company</h5>
+        <div class="modal-body">
+          <form action="">
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Enter Reason</legend>
+                <input type="text" name="company_name" [formControl]="declineControl">
+              </fieldset>
+              <ng-container *ngIf="(declineControl.dirty || declineControl.touched) && declineControl.errors">
+                <small *ngIf="declineControl.errors['required']" class="text-danger text-xs">Enter
+                  name</small>
+              </ng-container>
+            </div>
+            <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="declineCompany()">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!isLoading">
+                Save Changes
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="viewCompanyModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeDetailsModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">
+          View Details</h5>
+        <div class="modal-body" *ngIf="companyDetails">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="w-100">
+                <h6 class="text-primary">User Details</h6>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Title
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails?.title || '-'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      email address
+                    </dt>
+                    <dd class="text--500  text--deep-black text-break">
+                      {{companyDetails?.email}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      phone number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails?.telephone}}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      BVN
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.bvn ? companyDetails.bvn: '-'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      phone number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails?.telephone}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      DOB
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ companyDetails?.dob? companyDetails?.dob: '-' }}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      User Pin
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails && companyDetails.show_pin == 1? companyDetails?.pin: '****'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      bankname
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{(companyDetails?.payment_bank_name?
+                          companyDetails?.payment_bank_name: '-') | titlecase}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      accountnumber
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ companyDetails?.payment_account_number?
+                          companyDetails?.payment_account_number : '-' }}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Verification
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <span *ngIf="companyDetails.verified == '1'" class="badge bg-success py-2 px-3">Verified</span>
+                      <span *ngIf="companyDetails.verified == '0'" class="badge bg-secondary py-2 px-3">Not
+                        Verified</span>
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      official Email Verification
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <span *ngIf="companyDetails.underwritingchecklist?.official_email_verified == '1'" class="badge bg-success py-2 px-3">Verified</span>
+                      <span *ngIf="!companyDetails.underwritingchecklist || companyDetails.underwritingchecklist?.official_email_verified == '0'" class="badge bg-secondary py-2 px-3">Not
+                        Verified</span>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="w-100">
+                <h6 class="text-primary">Employment Details</h6>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      employer
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break text-capitalize">
+                      {{companyDetails.profile?.employer_name}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      employment type
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.profile.employment_status ? companyDetails.profile.employment_status: '-'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      employer address
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.profile.employer_address ? companyDetails.profile.employer_address : '-'}}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      official email
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.profile.official_email? companyDetails.profile.official_email: '-'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      salary bank
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.profile.income_account_bankcode | bankName}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      salary account number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{companyDetails.profile.income_account_number ? companyDetails.profile.income_account_number: '-'}}
+                    </dd>
+                  </div>
+                  <div class="col-md-4" *ngIf="companyDetails.profile.work_id">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      work id
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <a class="text-primary" style="cursor: pointer;" referrerpolicy="no-referrer" target="_blank" [href]="'https://api.kwikee.app/storage/documents/work-id/'+companyDetails.profile.work_id">
+                       View ID
+                      </a>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="approveCompany()">
+                <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!isLoading">
+                  Approve
+                </span>
+              </button>
+            </div>
+            <div class="col-6">
+              <button style="padding: 15px 2px;
+              font-size: 18px;" [disabled]="isLoading" type="button" class="btn btn-danger w-100"
+                (click)="openDeclineCompanyModal()">
+                <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span *ngIf="!isLoading">
+                  Decline
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+.sidebar-down{
+         
+    &.active,
+  &:hover {
+    background-color: #c9e0ff;
+    color: #1633a3 !important;
+    width: 70% !important;
+    border-radius: 14px !important;
+    border: none !important;
+    cursor: pointer;
+  }
+}
+
+  

@@ -1,0 +1,192 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Users Report</h4>
+        <p>View users report</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="row g-2 align-items-center">
+                <div class="col">
+                  <h5>Recent Reports</h5>
+                  <p>View and export your users report</p>
+                </div>
+                <div class="col-auto ms-auto">
+                  <button (click)="openSearchOptionsModal()" class="btn btn-purple py-2 px-3" type="button">
+                    Search Report
+                  </button>
+                </div>
+                <div class="col-auto" *ngIf="allReports && allReports.length > 0">
+                  <button (click)="exportReports()" class="btn btn-outline-dark" type="button">
+                    Export
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">name</th>
+                          <th scope="col">email</th>
+                          <th scope="col">telephone</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="allReports && allReports.length; else showNodata">
+                          <tr *ngFor="let report of allReports">
+                            <td>
+                              {{report.firstname | titlecase}} {{report.lastname | titlecase}}
+                            </td>
+                            <td>
+                              {{report.email}}
+                            </td>
+                            <td>
+                              {{report.telephone}}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
+                    [itemsFrom]="allReportsTableData?.from" [itemsEnd]="allReportsTableData?.to"
+                    [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<div class="modal fade" id="searchOptionsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeSearchOptionsModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">Search Users Report</h5>
+        <div class="modal-body">
+          <form [formGroup]="reportsForm" action="">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="position-relative pt-1 pb-4 mb-2">
+                  <fieldset class="form-control mb-0">
+                    <legend>Start Date</legend>
+                    <input type="date" name="start" formControlName="start">
+                  </fieldset>
+                  <ng-container
+                    *ngIf="(reportsForm.controls['start'].dirty || reportsForm.controls['start'].touched) && reportsForm.controls['start'].errors">
+                    <small *ngIf="reportsForm.controls['start'].errors['required']"
+                      class="text-danger text-xs">Select date</small>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="position-relative pt-1 pb-4 mb-2">
+                  <fieldset class="form-control mb-0">
+                    <legend>End Date</legend>
+                    <input type="date" name="end" formControlName="end">
+                  </fieldset>
+                  <ng-container
+                    *ngIf="(reportsForm.controls['end'].dirty || reportsForm.controls['end'].touched) && reportsForm.controls['end'].errors">
+                    <small *ngIf="reportsForm.controls['end'].errors['required']"
+                      class="text-danger text-xs">Select date</small>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="position-relative pt-1 pb-4 mb-2">
+                  <fieldset class="form-control mb-0">
+                    <legend>Search Text</legend>
+                    <input type="text" name="search_text" formControlName="search_text">
+                  </fieldset>
+                  <ng-container
+                    *ngIf="(reportsForm.controls['search_text'].dirty || reportsForm.controls['search_text'].touched) && reportsForm.controls['search_text'].errors">
+                    <small *ngIf="reportsForm.controls['search_text'].errors['required']"
+                      class="text-danger text-xs">Enter email</small>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Watchlist Filter</legend>
+                      <select name="watchlist" formControlName="watchlist">
+                        <option [value]="null" disabled>Select one</option>
+                        <option value="0">Customers not watchlisted</option>
+                        <option value="1">Watchlisted Customers</option>
+                      </select>
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(reportsForm.controls['watchlist'].dirty || reportsForm.controls['watchlist'].touched) && reportsForm.controls['watchlist'].errors">
+                      <small *ngIf="reportsForm.controls['watchlist'].errors['required']"
+                        class="text-danger text-xs">Select one</small>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="position-relative pt-1 pb-4 mb-2">
+                    <fieldset class="form-control mb-0">
+                      <legend>Blacklist Filter</legend>
+                      <select name="blacklist" formControlName="blacklist">
+                        <option [value]="null" disabled>Select one</option>
+                        <option value="0">Customers not blacklisted</option>
+                        <option value="1">Blacklisted Customers</option>
+                      </select>
+                    </fieldset>
+                    <ng-container
+                      *ngIf="(reportsForm.controls['blacklist'].dirty || reportsForm.controls['blacklist'].touched) && reportsForm.controls['blacklist'].errors">
+                      <small *ngIf="reportsForm.controls['blacklist'].errors['required']"
+                        class="text-danger text-xs">Select one</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button [disabled]="loading" type="button" class="btn btn-purple w-100" (click)="fetchUsersReport()">
+              <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!loading">
+                Get Results
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,230 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row g-2">
+      <div class="col-md-6 col-lg-5">
+        <h4>Companies</h4>
+        <p>View all your available Companies</p>
+      </div>
+      <div class="col-auto ms-auto">
+        <button [disabled]="loadingCompanies" (click)="openAddSingleCompanyModal()" class="btn btn-purple btn-lg py-2 px-3" type="button">
+          Add Single
+        </button>
+      </div>
+      <div class="col-auto">
+        <button [disabled]="loadingCompanies" (click)="openBulkUploadModal()" class="btn btn-purple btn-lg py-2 px-3" type="button">
+          Add Bulk
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>All Companies</h5>
+                <p>View all your available Companies</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loadingCompanies">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchCompanies($event)"></search-input>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col">Company ID</th>
+                          <th scope="col" [width]="'20%'">Company Name</th>
+                          <th scope="col">Active Loans</th>
+                          <th scope="col">Percentage Active</th>
+                          <th scope="col">Default Loans</th>
+                          <th scope="col">Non-perfoming loans</th>
+                          <th scope="col">Sector Code</th>
+                          <th scope="col">Pay Day</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="companiesData.length; else showNodata">
+                          <tr *ngFor="let company of companiesData">
+                            <td>
+                              <div>
+                                <button class="btn btn-sm btn-action dropdown-toggle" type="button"
+                                  data-bs-toggle="dropdown" aria-expanded="false">
+                                  More
+                                </button>
+                                <ul class="dropdown-menu">
+                                  <li><button type="button" (click)="populateFormForEdit(company)"
+                                      class="dropdown-item d-flex text-sm"><i class="ri-edit-line"></i>&nbsp;Edit</button></li>
+                                  <li>
+                                    <hr class="dropdown-divider">
+                                  </li>
+                                  <li><button type="button" (click)="blacklistCompany(company.company_id)"
+                                      class="dropdown-item d-flex text-sm"><i
+                                        class="ri-delete-bin-4-line"></i>&nbsp;Blacklist</button></li>
+                                  <ng-container>
+                                    <li>
+                                      <hr class="dropdown-divider">
+                                    </li>
+                                    <li><button type="button" (click)="deleteCompany(company.id)"
+                                        class="dropdown-item text-danger d-flex text-sm"><i
+                                          class="ri-delete-bin-4-line"></i>&nbsp;Delete</button></li>
+                                  </ng-container>
+                                </ul>
+                              </div>
+                            </td>
+                            <td>{{company.company_id}}</td>
+                            <td>{{company.company_name}}</td>
+                            <td>{{company.active_loans}}</td>
+                            <td>{{company.percentage_active | number : '1.2-2'}}%</td>
+                            <td>{{company.default}}</td>
+                            <td>{{company.non_performing}}</td>
+                            <!-- <td>{{company.loans.length}}</td> -->
+                            <td>{{company.sector_code}}</td>
+                            <td>{{company.payday}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination (pageSizeChanged)="pageSizeChanged($event)" [itemsFrom]="allCompaniesTableData?.from"
+                    [itemsEnd]="allCompaniesTableData?.to" [total-items]="totalDataRecord" [items-per-page]="pageSize"
+                    (pageChanged)="paginateData($event)">
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<div class="modal fade" id="newCompanyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeAddSingleCompanyModal()" role="button" aria-label="Close"
+          class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">
+          {{actionType == 'edit'? 'Edit Company':  'Add New Company'}}</h5>
+        <div class="modal-body">
+          <form [formGroup]="companyForm" action="">
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Company Name</legend>
+                <input type="text" name="company_name" formControlName="company_name">
+              </fieldset>
+              <ng-container
+                *ngIf="(companyForm.controls['company_name'].dirty || companyForm.controls['company_name'].touched) && companyForm.controls['company_name'].errors">
+                <small *ngIf="companyForm.controls['company_name'].errors['required']" class="text-danger text-xs">Enter
+                  name</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Sector Code</legend>
+                <input type="number" formControlName="sector_code">
+              </fieldset>
+              <ng-container
+                *ngIf="(companyForm.controls['sector_code'].dirty || companyForm.controls['sector_code'].touched) && companyForm.controls['sector_code'].errors">
+                <small *ngIf="companyForm.controls['sector_code'].errors['required']" class="text-danger text-xs">Enter
+                  code</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Pay Day</legend>
+                <input type="number" formControlName="payday">
+              </fieldset>
+              <ng-container
+                *ngIf="(companyForm.controls['payday'].dirty || companyForm.controls['payday'].touched) && companyForm.controls['payday'].errors">
+                <small *ngIf="companyForm.controls['payday'].errors['required']" class="text-danger text-xs">Enter
+                  day</small>
+              </ng-container>
+            </div>
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>Domain</legend>
+                <input type="text" formControlName="domain">
+              </fieldset>
+              <ng-container
+                *ngIf="(companyForm.controls['domain'].dirty || companyForm.controls['domain'].touched) && companyForm.controls['domain'].errors">
+                <small *ngIf="companyForm.controls['domain'].errors['required']" class="text-danger text-xs">Enter
+                  domain</small>
+              </ng-container>
+            </div>
+            <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="addCompany()">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!isLoading">
+                Save Changes
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="bulkCompanyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i (click)="closeBulkUploadModal()" role="button" aria-label="Close" class="ri-close-line close-modal"></i>
+        <h5 class="modal-title text-capitalize">
+          Add New Company (Bulk)</h5>
+        <div class="modal-body">
+          <form [formGroup]="companyForm" action="">
+            <div class="position-relative pt-1 pb-4 mb-2">
+              <fieldset class="form-control mb-0">
+                <legend>New Company (Bulk)</legend>
+                <input accept="image/png, image/jpg, image/jpeg, application/pdf, image/*" #documentInput
+                  (change)="onInputChange($event)" [formControl]="bulkUploadControl" type="file">
+              </fieldset>
+              <ng-container *ngIf="(bulkUploadControl.dirty || bulkUploadControl.touched) && bulkUploadControl.errors">
+                <small *ngIf="bulkUploadControl.errors['required']" class="text-danger text-xs">Select file</small>
+              </ng-container>
+            </div>
+            <button [disabled]="isLoading" type="button" class="btn btn-purple w-100" (click)="addBulkCompanies()">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span *ngIf="!isLoading">
+                Add Company
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

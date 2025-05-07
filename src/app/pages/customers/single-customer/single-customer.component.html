@@ -1,0 +1,720 @@
+<div class="greetings-area mt-5">
+  <div class="row justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <h4>View Customer</h4>
+      <p>View cutomer details</p>
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <loading-spinner style="min-height: 500px" [spinning]="loading">
+    <ng-container *ngIf="customerDetails">
+      <div class="row">
+        <div class="col-sm-12 mb-5">
+          <div class="card">
+            <div class="card-body">
+              <div class="p-1">
+                <div class="d-flex py-2 my-1 align-items-center">
+                  <img
+                    style="
+                      border-radius: 100%;
+                      border: 0.5px solid black;
+                      object-fit: cover;
+                      overflow: hidden;
+                    "
+                    [src]="
+                      customerDetails?.passport
+                        ? customerDetails?.passport
+                        : 'assets/images/placeholder.jpeg'
+                    "
+                    alt=""
+                    width="75"
+                    height="75"
+                  />
+                  <h5 class="ms-2">
+                    {{ customerDetails?.title }}&nbsp;{{
+                      customerDetails?.first_name | titlecase
+                    }}&nbsp;&nbsp;{{ customerDetails?.last_name | titlecase }}
+                  </h5>
+                </div>
+                <hr />
+              </div>
+              <div class="w-100 w-300 px-1 br-50">
+                <div class="row my-3">
+                  <div class="col-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      kwikee ID
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.reference }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      email address
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.email }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      phone number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.phone }}
+                    </dd>
+                  </div>
+                </div>
+                <!-- <div class="d-flex justify-content-between py-3">
+
+                  </div> -->
+                <div class="row my-3">
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      email address
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.email }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      phone number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.phone }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      DOB
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerDetails?.date_of_birth
+                          ? customerDetails?.date_of_birth
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      User Pin
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerDetails && customerDetails.show_pin == 1
+                          ? customerDetails?.pin
+                          : "****"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      bank name
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        (customerDetails?.payment_bank_name | titlecase)
+                          ? customerDetails?.payment_bank_name
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      account number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerDetails?.payment_account_number
+                          ? customerDetails?.payment_account_number
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      credit status
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <div [ngSwitch]="customerDetails?.credit_status">
+                        <div
+                          class="badge bg-danger py-2 px-3"
+                          *ngSwitchCase="'-3'"
+                        >
+                          Rejected
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'-2'"
+                        >
+                          Pending Bank Statment
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'-1'"
+                        >
+                          Incomplete
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'0'"
+                        >
+                          New Application
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'99'"
+                        >
+                          New Application
+                        </div>
+                        <div
+                          class="badge bg-success py-2 px-3"
+                          *ngSwitchCase="'1'"
+                        >
+                          Active
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'2'"
+                        >
+                          Non performing
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="'3'"
+                        >
+                          Default
+                        </div>
+                        <div
+                          class="badge bg-secondary py-2 px-3"
+                          *ngSwitchCase="null"
+                        >
+                          Credit has not been initiated
+                        </div>
+                      </div>
+                    </dd>
+                  </div>
+                  <div class="col-4">
+                    <dt
+                      class="text-black-50 text-capitalize whitespace-nowrap col-5"
+                    >
+                      residential address
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        (customerDetails?.residential_address | titlecase)
+                          ? customerDetails?.residential_address
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Credit Limit
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        (customerRecent?.loan_amount | currency : "₦")
+                          ? customerRecent?.loan_amount
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      joined
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerDetails?.created_at | date }}
+                    </dd>
+                  </div>
+                  <!-- <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      corn error
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{customerDetails?.cron_error}}
+                    </dd>
+                  </div> -->
+                  <div *ngIf="customerDetails.credit_status" class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      cron error
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerDetails?.cron_error
+                          ? customerDetails?.cron_error
+                          : "N/A"
+                      }}
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="customerWallet" class="card mt-3 mb-4">
+            <div class="card-body">
+              <div class="w-100 w-300 px-1">
+                <h6 class="text-primary">Wallet Details</h6>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Name
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerWallet?.account_name | titlecase }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerWallet?.account_number
+                          ? customerWallet?.account_number
+                          : 0
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Balance
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        (customerWallet?.available_balance
+                          ? customerWallet?.available_balance
+                          : 0
+                        ) | currency : "₦"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Status
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <span
+                        *ngIf="customerWallet?.status == 'active'"
+                        class="badge bg-success py-2 px-3"
+                        >Active</span
+                      >
+                      <span
+                        *ngIf="customerWallet?.status == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Active</span
+                      >
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="customerKwiklite" class="card mt-3 mb-4">
+            <div class="card-body">
+              <div class="w-100 w-300 px-1">
+                <h6 class="text-primary">Kwik Lite Details</h6>
+                <div class="row my-3">
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Name
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{ customerKwiklite?.account_name | titlecase }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Number
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        customerKwiklite?.account_number
+                          ? customerKwiklite?.account_number
+                          : 0
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Account Balance
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      {{
+                        (customerKwiklite?.available_balance
+                          ? customerKwiklite?.available_balance
+                          : 0
+                        ) | currency : "₦"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Status
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <span
+                        *ngIf="customerKwiklite?.status == 'active'"
+                        class="badge bg-success py-2 px-3"
+                        >Active</span
+                      >
+                      <span
+                        *ngIf="customerKwiklite?.status == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Not Active</span
+                      >
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <ul class="main-tab-card nav nav-pills" id="myTab" role="tablist">
+            <li class="nav-item me-2" role="presentation">
+              <button
+                class="nav-link active"
+                id="home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#home"
+                type="button"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true"
+              >
+                Credit Card
+              </button>
+            </li>
+            <li
+              *ngIf="kwikmaxHistory?.length >= 1"
+              class="nav-item me-2"
+              role="presentation"
+            >
+              <button
+                class="nav-link"
+                id="profile-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#KwikMax"
+                type="button"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false"
+              >
+                KwikMax History
+              </button>
+            </li>
+            <li
+              *ngIf="kwikgoalHistory?.length >= 1"
+              class="nav-item me-2"
+              role="presentation"
+            >
+              <button
+                class="nav-link"
+                id="profile-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#KwikGoal"
+                type="button"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false"
+              >
+                KwikGoal History
+              </button>
+            </li>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div
+              class="tab-pane active"
+              id="home"
+              role="tabpanel"
+              aria-labelledby="home-tab"
+              tabindex="0"
+            >
+              <div class="card mt-3">
+                <div class="card-body">
+                  <div class="table-responsive mt-3">
+                    <ng-container *ngIf="customerLoans">
+                      <table class="table">
+                        <thead class="bg-light text-capitalize">
+                          <tr>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Credit Limit</th>
+                            <th>Wallet balance</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <a
+                                role="navigation"
+                                [routerLink]="[
+                                  '/credit/view',
+                                  customerLoans.loan_id
+                                ]"
+                                class="btn btn-action"
+                              >
+                                <i class="ri-eye-line ri-xl"></i>View
+                              </a>
+                            </td>
+                            <td>{{ customerLoans.created_at | date }}</td>
+                            <td>
+                              {{
+                                (customerLoans.loan_amount
+                                  ? customerLoans.loan_amount
+                                  : 0
+                                ) | currency : "₦"
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                (customerLoans.wallet_balance
+                                  ? customerLoans.wallet_balance
+                                  : 0
+                                ) | currency : "₦"
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </ng-container>
+                    <ng-container *ngIf="!customerLoans">
+                      <div
+                        class="p-3 d-flex align-items-center flex-column justify-content-center"
+                      >
+                        <svg
+                          style="width: 1.5rem; height: 1.5rem"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                          ></path>
+                        </svg>
+                        <span style="font-size: 14px"> No data </span>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tab-pane"
+              id="KwikMax"
+              role="tabpanel"
+              aria-labelledby="profile-tab"
+              tabindex="0"
+            >
+              <div class="card mt-3">
+                <div class="card-body mt-3">
+                  <table class="table">
+                    <thead class="bg-light text-uppercase">
+                      <tr>
+                        <th></th>
+                        <th>Amount</th>
+                        <th>Interest Paid</th>
+                        <th>Tenor</th>
+                        <th>Title</th>
+                        <th>Start Date</th>
+                        <th>Maturity Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let maxHistory of kwikmaxHistory">
+                        <td>
+                          <div class="dropdown">
+                            <a
+                              [routerLink]="[
+                                '/savings/kwik-max/view',
+                                maxHistory?.id
+                              ]"
+                              class="btn btn-action"
+                              type="button"
+                              aria-expanded="false"
+                            >
+                              View
+                            </a>
+                          </div>
+                        </td>
+
+                        <td>
+                          {{
+                            (maxHistory?.amount ? maxHistory?.amount : 0)
+                              | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            (maxHistory?.interest_paid
+                              ? maxHistory?.interest_paid
+                              : 0
+                            ) | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>{{ maxHistory?.tenor }} days</td>
+                        <td>{{ maxHistory?.title | titlecase }}</td>
+                        <td>
+                          <span class="text-blue-badge">{{
+                            maxHistory?.created_at
+                              ? (maxHistory?.created_at | date)
+                              : "Null"
+                          }}</span>
+                        </td>
+                        <td>
+                          {{
+                            maxHistory?.maturity_date
+                              ? (maxHistory?.maturity_date | date)
+                              : "Null"
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tab-pane"
+              id="KwikGoal"
+              role="tabpanel"
+              aria-labelledby="profile-tab"
+              tabindex="0"
+            >
+              <div class="card mt-3">
+                <div class="card-body mt-3">
+                  <table class="table">
+                    <thead class="bg-light text-uppercase">
+                      <tr>
+                        <th></th>
+                        <th>Target Amount</th>
+                        <th>Saving Amount</th>
+                        <th>Saving Balance</th>
+                        <th>Percentage Saved</th>
+                        <th>Frequency</th>
+                        <th>Title</th>
+                        <th>Start Date</th>
+                        <th>Maturity Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let History of kwikgoalHistory">
+                        <td>
+                          <div class="dropdown">
+                            <a
+                              [routerLink]="[
+                                '/savings/kwik-goal/view',
+                                History?.id
+                              ]"
+                              class="btn btn-action"
+                              type="button"
+                              aria-expanded="false"
+                            >
+                              View
+                            </a>
+                          </div>
+                        </td>
+                        <td>
+                          {{
+                            (History?.target_amount
+                              ? History?.target_amount
+                              : 0
+                            ) | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            (History?.saving_amount
+                              ? History?.saving_amount
+                              : 0
+                            ) | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            (History?.saving_balance
+                              ? History?.saving_balance
+                              : 0
+                            ) | currency : "₦" : "symbol" : "1.2"
+                          }}
+                        </td>
+                        <td>{{ History?.percentage_saved }}%</td>
+                        <td>{{ History?.frequency | titlecase }}</td>
+                        <td>{{ History?.title | titlecase }}</td>
+                        <td>
+                          <span class="text-blue-badge">{{
+                            History?.start_date
+                              ? (History?.start_date | date)
+                              : "Null"
+                          }}</span>
+                        </td>
+                        <td>
+                          {{
+                            History?.maturity_date
+                              ? (History?.maturity_date | date)
+                              : "Null"
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </loading-spinner>
+</div>
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No data </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

@@ -1,0 +1,39 @@
+.btn-action {
+  font: 12px C-bold;
+  display: flex;
+  align-items: center;
+  background-color: #e8e6e8;
+  color: #091e42;
+  padding: 7px;
+  margin-right: 10px;
+
+  &:hover {
+    border-color: #e8e6e8;
+    outline: none;
+    background-color: #e8e6e8;
+    color: #091e42;
+  }
+}
+
+.btn-purple{
+  background-color: #1633a3;
+  color: #fff;
+  padding: 15px 2px;
+  font-size: 18px;
+  // font-size: 15px;
+
+  &:hover, &:active, &:focus {
+    background-color: #1633a3;
+    border-color: #1633a3;
+    color: #fff;
+  }
+
+  &[disabled] {
+    background-color: #1633a3;
+    color: #fff;
+  }
+}
+
+button[role="tab"] {
+  font-size: 14px;
+}

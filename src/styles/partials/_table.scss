@@ -1,0 +1,23 @@
+.table thead th {
+  font-size: 10px!important;
+  font-family: C-book;
+  border: none!important;
+  margin-bottom: 100px;
+}
+.table tbody td, .table tbody th {
+  font-family: C-black;
+  font-size: 12px;
+  align-items: center;
+  padding-top: 15px;
+  margin: 50px 0;
+}
+
+.table tbody td .btn {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.table tbody td .btn i {
+  margin-right: 10px;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "kwikee-admin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

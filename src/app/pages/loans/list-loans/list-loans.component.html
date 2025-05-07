@@ -1,0 +1,151 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Credit</h4>
+        <p>View all credit applications</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>Recent Credit</h5>
+                <p>View your credit applications</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchLoans($event)"></search-input>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="fraud-filter" class="visually-hidden">Filter</label>
+                      <div class="customcontrol">
+                        <div class="customcontrol-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0H24V24H0z" />
+                            <path
+                              d="M21 4v2h-1l-5 7.5V22H9v-8.5L4 6H3V4h18zM6.404 6L11 12.894V20h2v-7.106L17.596 6H6.404z" />
+                          </svg>
+                        </div>
+                        <select id="fraud-filter" (ngModelChange)="filterStatus($event)" [(ngModel)]="status"
+                          class="customcontrol-select w-100">
+                          <option value="0">New Application</option>
+                          <option value="1">Active Applications</option>
+                          <option value="2">Non Performing Credit</option>
+                          <option value="3">Default List</option>
+                          <option value="-1">Incomplete Applications</option>
+                          <option value="-3">Rejected</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-auto ms-auto" *ngIf="allLoansData && allLoansData.length">
+                      <button type="button" class="btn btn-outline-dark" (click)="exportLoans()">Export</button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Account Verified</th>
+                          <th scope="col">Official Email Verified</th>
+                          <th scope="col">Telephone</th>
+                          <th scope="col">Amount</th>
+                          <th scope="col">Amount Withdrawn</th>
+                          <th scope="col" *ngIf="status == '0' || status == '5'">Amount Withdrawn</th>
+                          <!-- <th>Monthly Repayment</th> -->
+                          <!-- <th *ngIf="showCronError">Processed Message</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="allLoansData && allLoansData.length; else showNodata">
+                          <tr *ngFor="let loan of allLoansData">
+
+                            <td>
+                              <a [routerLink]="['view', loan.auth_id]"  class="btn btn-action"><i class="ri-eye-line ri-xl"></i>View</a>
+                            </td>
+                            <td>
+                              <span
+                                class="text-blue-badge">{{(loan.credit_application_date ? loan.credit_application_date : loan.credit_application_date )| date:'medium'}}</span>
+                            </td>
+                            <td>
+                              {{loan.firstname | titlecase}} {{loan.lastname | titlecase}}
+                            </td>
+                            <td>
+                              <span *ngIf="loan.verified && loan.verified == '1'"
+                                class="badge bg-success py-2 px-3">Verified</span>
+                              <span *ngIf="loan.verified && loan.verified == '0'"
+                                class="badge bg-secondary py-2 px-3">Not Verified</span>
+                              <span *ngIf="!loan.verified" class="badge bg-secondary py-2 px-3">Not Verified</span>
+                            </td>
+                            <td>
+                              <span *ngIf="loan.underwritingchecklist?.official_email_verified == '1'" class="badge bg-success py-2 px-3">Verified</span>
+                              <span *ngIf="!loan.underwritingchecklist || loan.underwritingchecklist?.official_email_verified == '0'" class="badge bg-secondary py-2 px-3">Not
+                                Verified</span>
+                            </td>
+                            <td>
+                              {{loan.telephone}}
+                            </td>
+                            <td>
+                              <span
+                                class="text-blue-badge">{{(loan.most_recent_credit ? loan.most_recent_credit.loan_amount : 0) | currency:'₦': 'symbol':'1.2'}}</span>
+                            </td>
+                            <td>
+                              <span
+                                class="text-blue-badge">{{(loan.most_recent_credit ? loan.most_recent_credit.amount_withdrawn : 0) | currency:'₦': 'symbol':'1.2'}}</span>
+                            </td>
+                            <td *ngIf="status == '0' || status == '5'">
+                              {{loan.cron_error ? loan.cron_error: 'N/A'}}
+                            </td>
+                            <!-- <td>
+                              <span class="text-blue-badge">{{loan.monthly_repayment | currency:'₦': 'symbol':'1.2'}}</span>
+                            </td> -->
+                            <!-- <td *ngIf="showCronError">
+                              {{loan.cron_error}}
+                            </td> -->
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination (pageSizeChanged)="pageSizeChanged($event)" [itemsFrom]="allLoansTableData?.from"
+                    [itemsEnd]="allLoansTableData?.to" [total-items]="totalDataRecord" [items-per-page]="pageSize"
+                    (pageChanged)="paginateData($event)">
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

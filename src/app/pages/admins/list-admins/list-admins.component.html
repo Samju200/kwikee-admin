@@ -1,0 +1,134 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Meet your Team</h4>
+        <p>View and manage all added team members</p>
+      </div>
+      <div class="col-auto">
+        <button
+          [routerLink]="['/teams/new-member']"
+          class="btn btn-purple btn-lg py-2 px-3"
+          type="button"
+        >
+          New User
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>Team Members</h5>
+                <p>Manage your team</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="d-flex mt-2 mb-4">
+                    <search-input
+                      (searchTextEvent)="searchTeams($event)"
+                    ></search-input>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">Action</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Department</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container
+                          *ngIf="
+                            allUsersData && allUsersData.length;
+                            else showNodata
+                          "
+                        >
+                          <tr *ngFor="let user of allUsersData">
+                            <td>
+                              <div class="row g-2">
+                                <div class="col-auto">
+                                  <a
+                                    [routerLink]="['view', user.auth_id]"
+                                    class="btn btn-action"
+                                  >
+                                    <i class="ri-eye-line ri-xl"></i>View
+                                  </a>
+                                </div>
+                                <div class="col-auto">
+                                  <button
+                                    (click)="deleteUser(user.auth_id)"
+                                    class="btn btn-danger"
+                                  >
+                                    <i class="ri-delete-bin-4-line"></i>Delete
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              {{ user.first_name | titlecase }}
+                              {{ user.last_name | titlecase }}
+                            </td>
+                            <td>
+                              {{ user.email }}
+                            </td>
+                            <td>
+                              {{ user.department }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination
+                    (pageSizeChanged)="pageSizeChanged($event)"
+                    [itemsFrom]="allUsersTableData?.from"
+                    [itemsEnd]="allUsersTableData?.to"
+                    [total-items]="totalDataRecord"
+                    [items-per-page]="pageSize"
+                    (pageChanged)="paginateData($event)"
+                  >
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No data </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

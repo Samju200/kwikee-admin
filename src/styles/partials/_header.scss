@@ -1,0 +1,53 @@
+
+
+.topbar {
+  background-color: #fff;
+  z-index: 10;
+
+  .profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-family: C-book;
+    cursor: pointer;
+    width: 200px;
+
+    h6 {
+      padding: 0;
+      margin: 0;
+    }
+
+    &::before {
+      position: absolute;
+      content: "";
+      border-left: 1px solid #1633a3;
+      height: 80%;
+      width: 100%;
+      left: -5px;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #1633a3;
+      overflow: hidden;
+      margin-right: 15px;
+    }
+  }
+}
+
+.pro {
+  color: #091e42;
+  font-size: 14px;
+  // font-size: 16px;
+}
+
+.logout {
+  color: #b83f35;
+  display: flex;
+  // font-size: 18px;
+  font-size: 14px;
+}
+

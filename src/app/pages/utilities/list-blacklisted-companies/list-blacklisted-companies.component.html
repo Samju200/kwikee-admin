@@ -1,0 +1,92 @@
+<div>
+  <div class="greetings-area mt-5">
+    <div class="row g-2">
+      <div class="col-md-6 col-lg-5">
+        <h4>Blacklisted Companies</h4>
+        <p>View all your Blacklisted Companies</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>All Blacklisted Companies</h5>
+                <p>View all Blacklisted Companies</p>
+              </div>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loadingCompanies">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input (searchTextEvent)="searchCompanies($event)"></search-input>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col" [width]="'30%'">Company Name</th>
+                          <th scope="col">Pay Date</th>
+                          <th scope="col">Company ID</th>
+                          <th scope="col">Sector Code</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="companiesData.length; else showNodata">
+                          <tr *ngFor="let company of companiesData">
+                            <td>
+                              <div class="row g-2">
+                                <div class="col-auto">
+                                  <button (click)="whitelistCompany(company.company_id)"
+                                    class="btn btn-sm btn-action" type="button">
+                                    Whitelist
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{{company.company_name || '-'}}</td>
+                            <td>{{company.payday || '-'}}</td>
+                            <td>{{company.company_id || '-'}}</td>
+                            <td>{{company.sector_code || '-'}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
+                  [itemsFrom]="allCompaniesTableData?.from" [itemsEnd]="allCompaniesTableData?.to"
+                  [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
+                </kb-pagination> -->
+                </div>
+              </loading-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div class="p-3 d-flex align-items-center flex-column justify-content-center">
+        <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+          </path>
+        </svg>
+        <span style="font-size: 14px">
+          No data
+        </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
