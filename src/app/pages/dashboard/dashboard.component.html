@@ -428,43 +428,6 @@
         <div class="card-body">
           <div class="greetings-area my-3">
             <div class="col">
-              <h5>Last 5 KwikLite Applications</h5>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table">
-              <thead class="bg-light text-capitalize">
-                <tr>
-                  <th scope="col">&nbsp;</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container
-                  *ngIf="lastKwikLite && lastKwikLite.length; else showNodata"
-                >
-                  <tr *ngFor="let saving of lastKwikLite">
-                    <td>
-                      <a
-                        [routerLink]="['/savings/view', saving.investmentid]"
-                        class="btn btn-action"
-                        ><i class="ri-eye-line ri-xl"></i>View</a
-                      >
-                    </td>
-                    <td>
-                      {{ saving.user.firstname }} {{ saving.user.lastname }}
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="card mb-5">
-        <div class="card-body">
-          <div class="greetings-area my-3">
-            <div class="col">
               <h5>Last 5 KwikMax Applications</h5>
             </div>
           </div>
