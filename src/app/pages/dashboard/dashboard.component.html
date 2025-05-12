@@ -67,12 +67,16 @@
                     </td>
                     <td>
                       <span
-                        *ngIf="loan.user?.verified === '1'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '1'
+                        "
                         class="badge bg-success py-2 px-3"
                         >Verified</span
                       >
                       <span
-                        *ngIf="loan.user?.verified === '0'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '0'
+                        "
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
