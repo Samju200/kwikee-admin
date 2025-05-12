@@ -38,6 +38,7 @@
                   <th scope="col">Date</th>
                   <th scope="col">Name</th>
                   <th scope="col">Account Verified</th>
+                  <th scope="col">Telephone</th>
                   <th scope="col">Amount</th>
                   <th scope="col">Amount Withdrawn</th>
                 </tr>
@@ -49,42 +50,40 @@
                   <tr *ngFor="let loan of lastApproved">
                     <td>
                       <a
-                        [routerLink]="['/credit/view', loan.loan_id]"
+                        [routerLink]="['/credit/view', loan.credit_id]"
                         class="btn btn-action"
                         ><i class="ri-eye-line ri-xl"></i>View</a
                       >
                     </td>
                     <td>
                       <span class="text-blue-badge">{{
-                        (loan.date_submitted
-                          ? loan.date_submitted
-                          : loan.created_at
-                        ) | date : "medium"
+                        (loan.created_at ? loan.created_at : loan.created_at)
+                          | date : "medium"
                       }}</span>
                     </td>
                     <td>
-                      {{ loan.user.first_name | titlecase }}
-                      {{ loan.user.last_name | titlecase }}
+                      {{ loan.user?.first_name | titlecase }}
+                      {{ loan.user?.last_name | titlecase }}
                     </td>
                     <td>
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        *ngIf="loan.user?.verified === '1'"
                         class="badge bg-success py-2 px-3"
                         >Verified</span
                       >
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        *ngIf="loan.user?.verified === '0'"
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                       <span
-                        *ngIf="!loan.user.verified"
+                        *ngIf="!loan.user?.verified"
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                     </td>
                     <td>
-                      {{ loan.user.phone ? loan.user.phone : "N/A" }}
+                      {{ loan.user?.phone ? loan.user?.phone : "N/A" }}
                     </td>
                     <td>
                       <span class="text-blue-badge">{{
@@ -135,42 +134,44 @@
                   <tr *ngFor="let loan of lastPendingUnderwriting">
                     <td>
                       <a
-                        [routerLink]="['/credit/view', loan.loan_id]"
+                        [routerLink]="['/credit/view', loan.credit_id]"
                         class="btn btn-action"
                         ><i class="ri-eye-line ri-xl"></i>View</a
                       >
                     </td>
                     <td>
                       <span class="text-blue-badge">{{
-                        (loan.date_submitted
-                          ? loan.date_submitted
-                          : loan.created_at
-                        ) | date : "medium"
+                        (loan.created_at ? loan.created_at : loan.created_at)
+                          | date : "medium"
                       }}</span>
                     </td>
                     <td>
-                      {{ loan.user.first_name | titlecase }}
-                      {{ loan.user.last_name | titlecase }}
+                      {{ loan.user?.first_name | titlecase }}
+                      {{ loan.user?.last_name | titlecase }}
                     </td>
                     <td>
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '1'
+                        "
                         class="badge bg-success py-2 px-3"
                         >Verified</span
                       >
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '0'
+                        "
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                       <span
-                        *ngIf="!loan.user.verified"
+                        *ngIf="!loan.user?.verified"
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                     </td>
                     <td>
-                      {{ loan.user.telephone ? loan.user.telephone : "N/A" }}
+                      {{ loan.user?.phone ? loan.user?.telephone : "N/A" }}
                     </td>
                     <td>
                       <span class="text-blue-badge">{{
@@ -218,42 +219,44 @@
                   <tr *ngFor="let loan of lastDeclined">
                     <td>
                       <a
-                        [routerLink]="['credit/view', loan.loan_id]"
+                        [routerLink]="['credit/view', loan.credit_id]"
                         class="btn btn-action"
                         ><i class="ri-eye-line ri-xl"></i>View</a
                       >
                     </td>
                     <td>
                       <span class="text-blue-badge">{{
-                        (loan.date_submitted
-                          ? loan.date_submitted
-                          : loan.created_at
-                        ) | date : "medium"
+                        (loan.created_at ? loan.created_at : loan.created_at)
+                          | date : "medium"
                       }}</span>
                     </td>
                     <td>
-                      {{ loan.user.firstname | titlecase }}
-                      {{ loan.user.lastname | titlecase }}
+                      {{ loan.user?.first_name | titlecase }}
+                      {{ loan.user?.last_name | titlecase }}
                     </td>
                     <td>
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '1'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '1'
+                        "
                         class="badge bg-success py-2 px-3"
                         >Verified</span
                       >
                       <span
-                        *ngIf="loan.user.verified && loan.user.verified == '0'"
+                        *ngIf="
+                          loan.user?.verified && loan.user?.verified == '0'
+                        "
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                       <span
-                        *ngIf="!loan.user.verified"
+                        *ngIf="!loan.user?.verified"
                         class="badge bg-secondary py-2 px-3"
                         >Not Verified</span
                       >
                     </td>
                     <td>
-                      {{ loan.user.telephone ? loan.user.telephone : "N/A" }}
+                      {{ loan.user?.phone ? loan.user?.phone : "N/A" }}
                     </td>
                     <td>
                       <span class="text-blue-badge">{{

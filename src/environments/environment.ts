@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://demoapi.kwikee.app/api/v2/',
+  baseUrl: 'http://localhost:8000/api/v2/',
   // baseUrl: 'https://api.kwikee.app/api/v2/'
 };
 
