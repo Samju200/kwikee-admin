@@ -24,6 +24,7 @@
     "bootstrap": "^5.2.0-beta1",
     "moment": "^2.29.3",
     "ng-apexcharts": "^1.7.1",
+    "ngx-toastr": "^14.2.1",
     "notyf": "^3.10.0",
     "remixicon": "^2.5.0",
     "rxjs": "~7.5.0",

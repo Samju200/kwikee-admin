@@ -1,0 +1,222 @@
+<div class="container-fluid">
+  <!-- Validation Section -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4>Validate User by Reference</h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="validateForm" (ngSubmit)="validateUser()">
+        <div class="form-group">
+          <label for="reference">User Reference</label>
+          <input
+            type="text"
+            id="reference"
+            formControlName="reference"
+            class="form-control"
+            placeholder="Enter user reference"
+          />
+          <div
+            *ngIf="validateForm.get('reference')?.touched && validateForm.get('reference')?.errors?.['required']"
+            class="text-danger"
+          >
+            Reference is required
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isValidationLoading"
+        >
+          <span *ngIf="!isValidationLoading">Validate User</span>
+          <span *ngIf="isValidationLoading">Validating...</span>
+        </button>
+      </form>
+
+      <div *ngIf="validatedUser" class="mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5>User Details</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>ID:</strong> {{ validatedUser.id }}</p>
+                <p><strong>Email:</strong> {{ validatedUser.email }}</p>
+                <p>
+                  <strong>First Name:</strong> {{ validatedUser.first_name }}
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  <strong>Middle Name:</strong>
+                  {{ validatedUser.middle_name || "N/A" }}
+                </p>
+                <p><strong>Last Name:</strong> {{ validatedUser.last_name }}</p>
+                <p>
+                  <strong>Created At:</strong>
+                  {{ validatedUser.created_at | date : "medium" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Funding Sections -->
+  <div class="row">
+    <!-- Wallet Funding -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h4>Fund User Wallet</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="fundWalletForm">
+            <div class="form-group">
+              <label for="walletReference">User Reference</label>
+              <input
+                type="text"
+                id="walletReference"
+                formControlName="reference"
+                class="form-control"
+                placeholder="Enter user reference"
+                [value]="validatedUser ? validateForm.value.reference : ''"
+                [readOnly]="!!validatedUser"
+              />
+              <div
+                *ngIf="fundWalletForm.get('reference')?.touched && fundWalletForm.get('reference')?.errors?.['required']"
+                class="text-danger"
+              >
+                Reference is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="walletAmount">Amount to Fund (₦)</label>
+              <input
+                type="text"
+                id="walletAmount"
+                formControlName="amount"
+                class="form-control"
+                placeholder="Enter amount"
+                (blur)="formatAmount($event, 'wallet')"
+              />
+              <div
+                *ngIf="fundWalletForm.get('amount')?.touched && fundWalletForm.get('amount')?.errors?.['required']"
+                class="text-danger"
+              >
+                Amount is required
+              </div>
+              <div
+                *ngIf="fundWalletForm.get('amount')?.touched && fundWalletForm.get('amount')?.errors?.['min']"
+                class="text-danger"
+              >
+                Amount must be at least ₦1
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-success flex-grow-1"
+                (click)="fundUser()"
+                [disabled]="fundWalletForm.invalid || isFundingLoading"
+              >
+                <span *ngIf="!isFundingLoading">Fund Wallet</span>
+                <span *ngIf="isFundingLoading">Processing...</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="resetForm('wallet')"
+                [disabled]="isFundingLoading"
+              >
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credit Funding -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h4>Fund User Credit</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="fundCreditForm">
+            <div class="form-group">
+              <label for="creditReference">User Reference</label>
+              <input
+                type="text"
+                id="creditReference"
+                formControlName="reference"
+                class="form-control"
+                placeholder="Enter user reference"
+                [value]="validatedUser ? validateForm.value.reference : ''"
+                [readOnly]="!!validatedUser"
+              />
+              <div
+                *ngIf="fundCreditForm.get('reference')?.touched && fundCreditForm.get('reference')?.errors?.['required']"
+                class="text-danger"
+              >
+                Reference is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="creditAmount">Amount to Fund (₦)</label>
+              <input
+                type="text"
+                id="creditAmount"
+                formControlName="amount"
+                class="form-control"
+                placeholder="Enter amount"
+                (blur)="formatAmount($event, 'credit')"
+              />
+              <div
+                *ngIf="fundCreditForm.get('amount')?.touched && fundCreditForm.get('amount')?.errors?.['required']"
+                class="text-danger"
+              >
+                Amount is required
+              </div>
+              <div
+                *ngIf="fundCreditForm.get('amount')?.touched && fundCreditForm.get('amount')?.errors?.['min']"
+                class="text-danger"
+              >
+                Amount must be at least ₦1
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-success flex-grow-1"
+                (click)="fundUserCredit()"
+                [disabled]="fundCreditForm.invalid || isFundingLoading"
+              >
+                <span *ngIf="!isFundingLoading">Fund Credit</span>
+                <span *ngIf="isFundingLoading">Processing...</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="resetForm('credit')"
+                [disabled]="isFundingLoading"
+              >
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

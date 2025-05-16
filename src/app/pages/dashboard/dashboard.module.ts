@@ -6,16 +6,13 @@ import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '@shared/shared.module';
 import { SingleLineGraphModule } from '@shared/components/single-line-graph/single-line-graph.module';
 
-
 @NgModule({
-  declarations: [
-    DashboardComponent
-  ],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     SharedModule,
     SingleLineGraphModule,
-    DashboardRoutingModule
-  ]
+    DashboardRoutingModule,
+  ],
 })
-export class DashboardModule { }
+export class DashboardModule {}

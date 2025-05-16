@@ -1,0 +1,62 @@
+<!-- validate-user.component.html -->
+<div class="card">
+  <div class="card-header">
+    <h4>Validate User by Reference</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="validateForm" (ngSubmit)="validateUser()">
+      <div class="form-group">
+        <label for="reference">User Reference</label>
+        <input
+          type="text"
+          id="reference"
+          formControlName="reference"
+          class="form-control"
+          placeholder="Enter user reference"
+        />
+        <div
+          *ngIf="
+            validateForm.get('reference')?.touched &&
+            validateForm.get('reference')?.errors?.required
+          "
+          class="text-danger"
+        >
+          Reference is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Validate User</span>
+        <span *ngIf="isLoading">Validating...</span>
+      </button>
+    </form>
+
+    <div *ngIf="userData" class="mt-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>User Details</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>ID:</strong> {{ userData.id }}</p>
+              <p><strong>Email:</strong> {{ userData.email }}</p>
+              <p><strong>First Name:</strong> {{ userData.first_name }}</p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                <strong>Middle Name:</strong>
+                {{ userData.middle_name || "N/A" }}
+              </p>
+              <p><strong>Last Name:</strong> {{ userData.last_name }}</p>
+              <p>
+                <strong>Created At:</strong>
+                {{ userData.created_at | date : "medium" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

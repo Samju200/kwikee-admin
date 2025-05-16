@@ -16,6 +16,7 @@ const routes: Routes = [
             (m) => m.DashboardModule
           ),
       },
+
       {
         path: 'transactions',
         pathMatch: 'full',
@@ -82,6 +83,15 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'fund-transfer',
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('../../../pages/fund-transfer/fund-transfer.module').then(
+            (m) => m.FundTransferModule
+          ),
+      },
+
       {
         path: 'kwikmax-rates',
         children: [

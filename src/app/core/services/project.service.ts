@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environment/environment';
 import { map, Observable, shareReplay } from 'rxjs';
 
@@ -7,7 +7,38 @@ interface dataResponse {
   status: string;
   message: string;
 }
+interface DashboardSummary {
+  total_disbursed: number;
+  total_savings: number;
+  transactions_today: number;
+  new_users_today: number;
+}
 
+interface GraphDataPoint {
+  date: string;
+  amount: number;
+}
+
+interface RecentActivity {
+  id: number;
+  created_at: string;
+  user?: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  amount?: number;
+  status?: number;
+  // Add other activity-specific fields as needed
+}
+interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+}
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   constructor(private http: HttpClient) {}
@@ -532,5 +563,71 @@ export class ProjectService {
   //dashboard
   getDashboardData() {
     return this.http.get(`${environment.baseUrl}loan/dashboard/new`);
+  }
+  getDashboardSummary(
+    params: { days?: number } = {}
+  ): Observable<DashboardSummary> {
+    return this.http.get<DashboardSummary>(
+      `${environment.baseUrl}dashboard/summary`,
+      {
+        params: new HttpParams({ fromObject: params }),
+      }
+    );
+  }
+
+  getDashboardGraphData(
+    params: {
+      days?: number;
+      status?: string;
+      type?: string;
+      user_segment?: string;
+    } = {}
+  ): Observable<GraphDataPoint[]> {
+    return this.http.get<GraphDataPoint[]>(
+      `${environment.baseUrl}dashboard/graph`,
+      {
+        params: new HttpParams({ fromObject: params }),
+      }
+    );
+  }
+
+  getDashboardRecentActivities(params: {
+    type: string;
+    status?: string;
+    search?: string;
+    page?: number;
+    per_page?: number;
+  }): Observable<PaginatedResponse<RecentActivity>> {
+    return this.http.get<PaginatedResponse<RecentActivity>>(
+      `${environment.baseUrl}dashboard/activities`,
+      {
+        params: new HttpParams({ fromObject: params }),
+      }
+    );
+  }
+  validateUserByReference(reference: string): Observable<any> {
+    return this.http.post(
+      `${environment.baseUrl}admin/validate-user-by-reference`,
+      { reference }
+    );
+  }
+
+  fundUserByReference(reference: string, amount: number): Observable<any> {
+    return this.http.post(
+      `${environment.baseUrl}admin/fund-user-by-reference`,
+      {
+        reference,
+        amount: amount.toString().replace(/,/g, ''), // Remove commas as done in backend
+      }
+    );
+  }
+  fundUserCreditByReference(reference: string, amount: number): Observable<any> {
+    return this.http.post(
+      `${environment.baseUrl}admin/fund-user-credit-by-reference`,
+      {
+        reference,
+        amount: amount.toString().replace(/,/g, ''), // Remove commas as done in backend
+      }
+    );
   }
 }

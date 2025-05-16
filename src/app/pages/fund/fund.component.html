@@ -1,0 +1,102 @@
+<!-- fund-user.component.html -->
+<div class="card">
+  <div class="card-header">
+    <h4>Fund User Wallet by Reference</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="fundForm">
+      <div class="form-group">
+        <label for="reference">User Reference</label>
+        <div class="input-group">
+          <input
+            type="text"
+            id="reference"
+            formControlName="reference"
+            class="form-control"
+            placeholder="Enter user reference"
+            [readOnly]="validationComplete"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="validateUser()"
+              [disabled]="fundForm.get('reference')?.invalid || isLoading"
+            >
+              <span *ngIf="!isLoading">Validate</span>
+              <span *ngIf="isLoading">Validating...</span>
+            </button>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            fundForm.get('reference')?.touched &&
+            fundForm.get('reference')?.errors?.required
+          "
+          class="text-danger"
+        >
+          Reference is required
+        </div>
+      </div>
+
+      <div *ngIf="userData" class="mb-3">
+        <div class="alert alert-info">
+          <p>
+            <strong>User Found:</strong> {{ userData.first_name }}
+            {{ userData.last_name }}
+          </p>
+          <p><strong>Email:</strong> {{ userData.email }}</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount to Fund (₦)</label>
+        <input
+          type="text"
+          id="amount"
+          formControlName="amount"
+          class="form-control"
+          placeholder="Enter amount"
+          (blur)="formatAmount($event)"
+        />
+        <div
+          *ngIf="
+            fundForm.get('amount')?.touched &&
+            fundForm.get('amount')?.errors?.required
+          "
+          class="text-danger"
+        >
+          Amount is required
+        </div>
+        <div
+          *ngIf="
+            fundForm.get('amount')?.touched &&
+            fundForm.get('amount')?.errors?.min
+          "
+          class="text-danger"
+        >
+          Amount must be at least ₦1
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="fundUser()"
+        [disabled]="fundForm.invalid || !validationComplete || isLoading"
+      >
+        <span *ngIf="!isLoading">Fund Wallet</span>
+        <span *ngIf="isLoading">Processing...</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary ml-2"
+        (click)="resetForm()"
+        [disabled]="isLoading"
+      >
+        Reset
+      </button>
+    </form>
+  </div>
+</div>

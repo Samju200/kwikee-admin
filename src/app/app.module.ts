@@ -7,27 +7,33 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { TokenInterceptor } from './core/interceptors/token-interceptor';
 import { NOTYF, notyfFactory } from './shared/utils/notyf.token';
-
-
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
     },
     {
-      provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
     },
-    { provide: NOTYF, useFactory: notyfFactory }
+    { provide: NOTYF, useFactory: notyfFactory },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
