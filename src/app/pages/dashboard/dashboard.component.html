@@ -285,7 +285,7 @@
         <div class="card-body">
           <div class="greetings-area my-3">
             <div class="col">
-              <h5>Last 5 Transactions</h5>
+              <h5>Last 5 Wallet Transactions</h5>
             </div>
           </div>
           <div class="table-responsive">
@@ -310,6 +310,283 @@
                   "
                 >
                   <tr *ngFor="let transaction of lastTransactions">
+                    <td>
+                      <span
+                        *ngIf="transaction.processed == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Processed</span
+                      >
+                      <span
+                        *ngIf="transaction.processed == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Awaiting Processing</span
+                      >
+                    </td>
+                    <td>
+                      {{ transaction.user?.first_name }}
+                      {{ transaction.user?.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        (transaction.amount ? transaction.amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>{{ transaction.bankcode | bankName }}</td>
+                    <td>
+                      {{
+                        transaction.accountnumber
+                          ? transaction.accountnumber
+                          : "N/A"
+                      }}
+                    </td>
+                    <td>
+                      {{ transaction.narration }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="transaction.transaction_type == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Debit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '2'"
+                        class="badge bg-success py-2 px-3"
+                        >Credit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '3'"
+                        class="badge bg-danger py-2 px-3"
+                        >Debit (Failed)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '4'"
+                        class="badge bg-danger py-2 px-3"
+                        >Credit (Failed)</span
+                      >
+                    </td>
+                    <td>{{ transaction.created_at | date }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 Credit Transactions</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">status</th>
+                  <th scope="col">user</th>
+                  <th scope="col">amount</th>
+                  <th scope="col">bank name</th>
+                  <th scope="col">account number</th>
+                  <th scope="col">narration</th>
+                  <th scope="col">transaction type</th>
+                  <th scope="col">transaction date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    lastTransactionsCredit && lastTransactionsCredit.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let transaction of lastTransactionsCredit">
+                    <td>
+                      <span
+                        *ngIf="transaction.processed == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Processed</span
+                      >
+                      <span
+                        *ngIf="transaction.processed == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Awaiting Processing</span
+                      >
+                    </td>
+                    <td>
+                      {{ transaction.user?.first_name }}
+                      {{ transaction.user?.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        (transaction.amount ? transaction.amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>{{ transaction.bankcode | bankName }}</td>
+                    <td>
+                      {{
+                        transaction.accountnumber
+                          ? transaction.accountnumber
+                          : "N/A"
+                      }}
+                    </td>
+                    <td>
+                      {{ transaction.narration }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="transaction.transaction_type == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Debit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '2'"
+                        class="badge bg-success py-2 px-3"
+                        >Credit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '3'"
+                        class="badge bg-danger py-2 px-3"
+                        >Debit (Failed)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '4'"
+                        class="badge bg-danger py-2 px-3"
+                        >Credit (Failed)</span
+                      >
+                    </td>
+                    <td>{{ transaction.created_at | date }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 KwikMax Transactions</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">status</th>
+                  <th scope="col">user</th>
+                  <th scope="col">amount</th>
+                  <th scope="col">bank name</th>
+                  <th scope="col">account number</th>
+                  <th scope="col">narration</th>
+                  <th scope="col">transaction type</th>
+                  <th scope="col">transaction date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    lastTransactionsKwikmax && lastTransactionsKwikmax.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let transaction of lastTransactionsKwikmax">
+                    <td>
+                      <span
+                        *ngIf="transaction.processed == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Processed</span
+                      >
+                      <span
+                        *ngIf="transaction.processed == '0'"
+                        class="badge bg-secondary py-2 px-3"
+                        >Awaiting Processing</span
+                      >
+                    </td>
+                    <td>
+                      {{ transaction.user?.first_name }}
+                      {{ transaction.user?.last_name }}
+                    </td>
+                    <td>
+                      {{
+                        (transaction.amount ? transaction.amount : 0)
+                          | currency : "₦" : "symbol" : "1.2"
+                      }}
+                    </td>
+                    <td>{{ transaction.bankcode | bankName }}</td>
+                    <td>
+                      {{
+                        transaction.accountnumber
+                          ? transaction.accountnumber
+                          : "N/A"
+                      }}
+                    </td>
+                    <td>
+                      {{ transaction.narration }}
+                    </td>
+                    <td>
+                      <span
+                        *ngIf="transaction.transaction_type == '1'"
+                        class="badge bg-success py-2 px-3"
+                        >Debit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '2'"
+                        class="badge bg-success py-2 px-3"
+                        >Credit (Successful)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '3'"
+                        class="badge bg-danger py-2 px-3"
+                        >Debit (Failed)</span
+                      >
+                      <span
+                        *ngIf="transaction.transaction_type == '4'"
+                        class="badge bg-danger py-2 px-3"
+                        >Credit (Failed)</span
+                      >
+                    </td>
+                    <td>{{ transaction.created_at | date }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-body">
+          <div class="greetings-area my-3">
+            <div class="col">
+              <h5>Last 5 KwikGoals Transactions</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">status</th>
+                  <th scope="col">user</th>
+                  <th scope="col">amount</th>
+                  <th scope="col">bank name</th>
+                  <th scope="col">account number</th>
+                  <th scope="col">narration</th>
+                  <th scope="col">transaction type</th>
+                  <th scope="col">transaction date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    lastTransactionsGoal && lastTransactionsGoal.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let transaction of lastTransactionsGoal">
                     <td>
                       <span
                         *ngIf="transaction.processed == '1'"

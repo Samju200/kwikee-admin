@@ -11,6 +11,9 @@ import { Subject, takeUntil } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   dashboardData: any;
   lastTransactions: Array<any> = [];
+  lastTransactionsCredit: Array<any> = [];
+  lastTransactionsKwikmax: Array<any> = [];
+  lastTransactionsGoal: Array<any> = [];
   lastApproved: Array<any> = [];
   lastDeclined: Array<any> = [];
   lastPendingUnderwriting: Array<any> = [];
@@ -48,6 +51,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.isFetchingDashboard = false;
           this.dashboardData = data;
           this.lastTransactions = data.last_transactions;
+          this.lastTransactionsCredit = data.last_transactions_credit;
+          this.lastTransactionsKwikmax = data.last_transactions_kwikmax;
+          this.lastTransactionsGoal = data.last_transactions_goal;
+
           this.lastApproved = data.last_approved;
           this.lastDeclined = data.last_declined;
           this.lastPendingUnderwriting = data.last_pending_underwriting;
