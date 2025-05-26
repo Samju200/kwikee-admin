@@ -50,7 +50,7 @@
                   <tr *ngFor="let loan of lastApproved">
                     <td>
                       <a
-                        [routerLink]="['/credit/view', loan.credit_id]"
+                        [routerLink]="['/credit/view', loan.auth_id]"
                         class="btn btn-action"
                         ><i class="ri-eye-line ri-xl"></i>View</a
                       >
@@ -223,7 +223,7 @@
                   <tr *ngFor="let loan of lastDeclined">
                     <td>
                       <a
-                        [routerLink]="['credit/view', loan.credit_id]"
+                        [routerLink]="['credit/view', loan.auth_id]"
                         class="btn btn-action"
                         ><i class="ri-eye-line ri-xl"></i>View</a
                       >
@@ -466,7 +466,7 @@
           </div>
         </div>
       </div>
-      <div class="card mb-5">
+      <!-- <div class="card mb-5">
         <div class="card-body">
           <div class="greetings-area my-3">
             <div class="col">
@@ -649,7 +649,7 @@
             </table>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="card mb-5">
         <div class="card-body">
           <div class="greetings-area my-3">

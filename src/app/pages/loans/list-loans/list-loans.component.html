@@ -80,17 +80,17 @@
                           <th scope="col">&nbsp;</th>
                           <th scope="col">Date</th>
                           <th scope="col">Name</th>
-                          <th scope="col">Account Verified</th>
-                          <th scope="col">Official Email Verified</th>
-                          <th scope="col">Telephone</th>
-                          <th scope="col">Amount</th>
-                          <th scope="col">Amount Withdrawn</th>
-                          <th
+                          <th scope="col">Credit Limit</th>
+                          <th scope="col">Amoun Withdraw</th>
+                          <th scope="col">Credit Balance</th>
+                          <th scope="col">Payback Amount</th>
+                          <th scope="col">Repayment Due Date</th>
+                          <!-- <th
                             scope="col"
                             *ngIf="status == '0' || status == '5'"
                           >
                             Amount Withdrawn
-                          </th>
+                          </th> -->
                           <!-- <th>Monthly Repayment</th> -->
                           <!-- <th *ngIf="showCronError">Processed Message</th> -->
                         </tr>
@@ -123,45 +123,6 @@
                               {{ loan.last_name | titlecase }}
                             </td>
                             <td>
-                              <span
-                                *ngIf="loan.verified && loan.verified == '1'"
-                                class="badge bg-success py-2 px-3"
-                                >Verified</span
-                              >
-                              <span
-                                *ngIf="loan.verified && loan.verified == '0'"
-                                class="badge bg-secondary py-2 px-3"
-                                >Not Verified</span
-                              >
-                              <span
-                                *ngIf="!loan.verified"
-                                class="badge bg-secondary py-2 px-3"
-                                >Not Verified</span
-                              >
-                            </td>
-                            <td>
-                              <span
-                                *ngIf="
-                                  loan.underwritingchecklist
-                                    ?.official_email_verified == '1'
-                                "
-                                class="badge bg-success py-2 px-3"
-                                >Verified</span
-                              >
-                              <span
-                                *ngIf="
-                                  !loan.underwritingchecklist ||
-                                  loan.underwritingchecklist
-                                    ?.official_email_verified == '0'
-                                "
-                                class="badge bg-secondary py-2 px-3"
-                                >Not Verified</span
-                              >
-                            </td>
-                            <td>
-                              {{ loan.phone }}
-                            </td>
-                            <td>
                               <span class="text-blue-badge">{{
                                 (loan.most_recent_credit
                                   ? loan.most_recent_credit.loan_amount
@@ -177,9 +138,35 @@
                                 ) | currency : "₦" : "symbol" : "1.2"
                               }}</span>
                             </td>
-                            <td *ngIf="status == '0' || status == '5'">
-                              {{ loan.cron_error ? loan.cron_error : "N/A" }}
+                            <td>
+                              <span class="text-blue-badge">{{
+                                (loan.most_recent_credit
+                                  ? loan.most_recent_credit.balance
+                                  : 0
+                                ) | currency : "₦" : "symbol" : "1.2"
+                              }}</span>
                             </td>
+                            <td>
+                              <span class="text-blue-badge">{{
+                                (loan.most_recent_credit
+                                  ? loan.most_recent_credit.payback_amount
+                                  : 0
+                                ) | currency : "₦" : "symbol" : "1.2"
+                              }}</span>
+                            </td>
+                            <td>
+                              <span class="text-blue-badge">
+                                {{
+                                  loan.most_recent_credit
+                                    ? loan.most_recent_credit.repayment_date
+                                    : ""
+                                }}
+                              </span>
+                            </td>
+
+                            <!-- <td *ngIf="status == '0' || status == '5'">
+                              {{ loan.cron_error ? loan.cron_error : "N/A" }}
+                            </td> -->
                             <!-- <td>
                               <span class="text-blue-badge">{{loan.monthly_repayment | currency:'₦': 'symbol':'1.2'}}</span>
                             </td> -->

@@ -8,9 +8,6 @@
   <div class="navigation mt-5 d-none d-lg-block">
     <h6>HOME</h6>
     <ul>
-      <!-- <a class="link" href="/Get-Started">
-        <li><span><i class="ri-add-line"></i>Get Started</span></li>
-      </a> -->
       <a class="link" [routerLink]="['/dashboard']" routerLinkActive="active">
         <li>
           <span><i class="ri-home-5-line"></i>Dashboard</span>
@@ -26,31 +23,53 @@
         </li>
       </a>
     </ul>
+
     <h6>YOUR BUSINESS INSIGHTS</h6>
     <ul>
-      <a class="link" [routerLink]="['/credit']" routerLinkActive="active">
-        <li>
-          <span><i class="ri-wallet-line"></i>Credit</span>
-        </li>
-      </a>
+      <!-- Credit Section -->
       <a
         class="link"
-        [routerLink]="['/credit-score-ranges']"
-        routerLinkActive="active"
+        style="cursor: pointer"
+        data-bs-toggle="collapse"
+        href="#creditCollapse"
       >
-        <li>
-          <span><i class="ri-line-chart-line"></i>Credit Score Ranges</span>
+        <li
+          [ngClass]="{
+            act: creditChild1RLA.isActive || creditChild2RLA.isActive
+          }"
+        >
+          <span
+            ><i class="ri-wallet-line"></i>Credit<i
+              class="ri-arrow-drop-down-line ms-4"
+            ></i
+          ></span>
         </li>
       </a>
-      <a
-        class="link"
-        [routerLink]="['/kwikmax-rates']"
-        routerLinkActive="active"
-      >
-        <li>
-          <span><i class="ri-percent-line"></i>KwikMax Rates</span>
-        </li>
-      </a>
+      <ul>
+        <div class="collapse font ms-3" id="creditCollapse">
+          <a
+            class="link-drop"
+            #creditChild1RLA="routerLinkActive"
+            [routerLink]="['/credit']"
+            routerLinkActive="active"
+          >
+            <li class="sidebar-down">
+              <span><i class="ri-wallet-line"></i>Credit</span>
+            </li>
+          </a>
+          <a
+            class="link-drop"
+            #creditChild2RLA="routerLinkActive"
+            [routerLink]="['/credit-score-ranges']"
+            routerLinkActive="active"
+          >
+            <li class="sidebar-down">
+              <span><i class="ri-line-chart-line"></i>Credit Score Ranges</span>
+            </li>
+          </a>
+        </div>
+      </ul>
+
       <a
         class="link"
         [routerLink]="['/transactions']"
@@ -60,18 +79,20 @@
           <span><i class="ri-briefcase-2-line"></i>Transactions</span>
         </li>
       </a>
+
+      <!-- Savings Section -->
       <a
         class="link"
         style="cursor: pointer"
         data-bs-toggle="collapse"
-        href="#collapseExample"
+        href="#savingsCollapse"
       >
         <li
           [ngClass]="{
             act:
-              reportsChild1RLA.isActive ||
-              reportsChild2RLA.isActive ||
-              reportsChild3RLA.isActive
+              savingsChild1RLA.isActive ||
+              savingsChild2RLA.isActive ||
+              savingsChild3RLA.isActive
           }"
         >
           <span
@@ -82,10 +103,10 @@
         </li>
       </a>
       <ul>
-        <div class="collapse font ms-3" id="collapseExample">
+        <div class="collapse font ms-3" id="savingsCollapse">
           <a
             class="link-drop"
-            #reportsChild1RLA="routerLinkActive"
+            #savingsChild1RLA="routerLinkActive"
             [routerLink]="['/savings/kwik-max']"
             routerLinkActive="active"
           >
@@ -95,7 +116,7 @@
           </a>
           <a
             class="link-drop"
-            #reportsChild2RLA="routerLinkActive"
+            #savingsChild2RLA="routerLinkActive"
             [routerLink]="['/savings/kwik-goal']"
             routerLinkActive="active"
           >
@@ -105,16 +126,17 @@
           </a>
           <a
             class="link-drop"
-            #reportsChild3RLA="routerLinkActive"
-            [routerLink]="['/savings/kwik-lite']"
+            #savingsChild3RLA="routerLinkActive"
+            [routerLink]="['/kwikmax-rates']"
             routerLinkActive="active"
           >
             <li class="sidebar-down">
-              <span><i class="ri-wallet-2-fill"></i>Kwik Lite</span>
+              <span><i class="ri-percent-line"></i>KwikMax Rates</span>
             </li>
           </a>
         </div>
       </ul>
+
       <a class="link" [routerLink]="['/customers']" routerLinkActive="active">
         <li>
           <span><i class="ri-team-line"></i>Customers</span>
@@ -130,6 +152,7 @@
         </li>
       </a>
     </ul>
+
     <h6>REPORTS</h6>
     <ul>
       <a
@@ -169,6 +192,7 @@
         </li>
       </a>
     </ul>
+
     <h6>EXTRA</h6>
     <ul>
       <a
@@ -223,6 +247,7 @@
         </li>
       </a>
     </ul>
+
     <h6>SETTINGS</h6>
     <ul>
       <a class="link" [routerLink]="['/teams']" routerLinkActive="active">

@@ -501,7 +501,7 @@
                   </div>
                   <div class="col-md-4">
                     <dt class="text-black-50 text-capitalize whitespace-nowrap">
-                      wallet balance
+                      Credit balance
                     </dt>
                     <dd class="text--500 text--deep-black text-break">
                       {{
@@ -717,7 +717,7 @@
               </div>
             </div>
           </div>
-          <div class="card mb-4">
+          <!-- <div class="card mb-4">
             <div class="card-body">
               <div class="w-100 w-300 px-1">
                 <h6 class="text-primary">Next Of Kin Details</h6>
@@ -763,11 +763,11 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="col-sm-12">
           <ul class="main-tab-card nav nav-pills" id="myTab" role="tablist">
-            <li class="nav-item me-2" role="presentation">
+            <!-- <li class="nav-item me-2" role="presentation">
               <button
                 class="nav-link active"
                 id="bvn-tab"
@@ -780,11 +780,11 @@
               >
                 BVN Data
               </button>
-            </li>
+            </li> -->
             <li class="nav-item me-2" role="presentation">
               <button
                 (click)="fetchCreditHistory()"
-                class="nav-link"
+                class="nav-link active"
                 id="credit-history-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#credit-history"
@@ -871,7 +871,7 @@
 
           <!-- Tab panes -->
           <div class="tab-content">
-            <div
+            <!-- <div
               class="tab-pane active"
               id="bvn"
               role="tabpanel"
@@ -992,7 +992,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div
               class="tab-pane"
               id="credit-history"
@@ -1172,7 +1172,7 @@
               </div>
             </div>
             <div
-              class="tab-pane"
+              class="tab-pane active"
               id="fraudchecklist"
               role="tabpanel"
               aria-labelledby="fraudchecklist-tab"
