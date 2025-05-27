@@ -84,6 +84,19 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'account-enquiry',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () =>
+              import(
+                '../../../pages/account-enquiry/account-enquiry.module'
+              ).then((m) => m.AccountEnquiryModule),
+          },
+        ],
+      },
+      {
         path: 'fund-transfer',
         pathMatch: 'full',
         loadChildren: () =>

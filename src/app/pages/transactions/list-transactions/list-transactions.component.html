@@ -28,8 +28,8 @@
                       ></search-input>
                     </div>
                     <div class="col-auto">
-                      <label for="fraud-filter" class="visually-hidden"
-                        >Filter</label
+                      <label for="date-range" class="visually-hidden"
+                        >Date Range</label
                       >
                       <div class="customcontrol">
                         <div class="customcontrol-icon">
@@ -41,19 +41,25 @@
                           >
                             <path fill="none" d="M0 0H24V24H0z" />
                             <path
-                              d="M21 4v2h-1l-5 7.5V22H9v-8.5L4 6H3V4h18zM6.404 6L11 12.894V20h2v-7.106L17.596 6H6.404z"
+                              d="M9 1v2h6V1h2v2h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h2zm11 9H4v9h16v-9zM8 13v2H6v-2h2zm6 0v2h-2v-2h2zm6 0v2h-2v-2h2zm-12 4v2H6v-2h2zm6 0v2h-2v-2h2zm6 0v2h-2v-2h2zM8 5v2H6V5h2zm6 0v2h-2V5h2zm6 0v2h-2V5h2z"
                             />
                           </svg>
                         </div>
-                        <select
-                          id="fraud-filter"
-                          (ngModelChange)="filterFraud($event)"
-                          [(ngModel)]="fraud"
+                        <input
+                          type="date"
+                          id="start-date"
                           class="customcontrol-select"
-                        >
-                          <option [value]="undefined">Not Fraud</option>
-                          <option value="fraud">Fraud</option>
-                        </select>
+                          [(ngModel)]="startDate"
+                          (change)="filterByDate()"
+                        />
+                        <span class="mx-2">to</span>
+                        <input
+                          type="date"
+                          id="end-date"
+                          class="customcontrol-select"
+                          [(ngModel)]="endDate"
+                          (change)="filterByDate()"
+                        />
                       </div>
                     </div>
                     <div class="col-auto ms-auto">
@@ -101,7 +107,6 @@
                           <th scope="col">narration</th>
                           <th scope="col">transaction type</th>
                           <th scope="col">transaction date</th>
-                          <th scope="col">more</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -167,42 +172,7 @@
                                 >Credit (Failed)</span
                               >
                             </td>
-                            <td>{{ transaction.transaction_date | date }}</td>
-                            <td>
-                              <ng-container *ngIf="transaction.fraud == '1'">
-                                <span class="d-flex align-items-center"
-                                  ><i class="ri-add-line ri-lg"></i
-                                  ><span> Top-Up</span></span
-                                >
-                                <button
-                                  (click)="markAsFraud(transaction.id)"
-                                  class="btn btn-action btn-sm"
-                                >
-                                  Unmark Fraud
-                                </button>
-                                <br />
-                                <br />
-                                <button
-                                  (click)="
-                                    blockCustomer(transaction.user.email)
-                                  "
-                                  class="btn btn-outline-danger btn-sm"
-                                >
-                                  Block Customer
-                                </button>
-                                <br />
-                                <br />
-                                <button
-                                  (click)="declineTransaction(transaction.id)"
-                                  class="btn btn-outline-danger btn-sm"
-                                >
-                                  Decline
-                                </button>
-                              </ng-container>
-                              <span *ngIf="transaction.fraud == '0'"
-                                >Not Fraud</span
-                              >
-                            </td>
+                            <td>{{ transaction.created_at | date }}</td>
                           </tr>
                         </ng-container>
                       </tbody>

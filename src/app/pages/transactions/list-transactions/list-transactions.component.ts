@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-list-transactions',
   templateUrl: './list-transactions.component.html',
-  styleUrls: ['./list-transactions.component.scss']
+  styleUrls: ['./list-transactions.component.scss'],
 })
 export class ListTransactionsComponent implements OnInit, OnDestroy {
   pageSize = 15;
@@ -16,15 +16,20 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
   allTransactionsData: Array<any> = [];
   allTransactionsTableData: any;
   loading = true;
-  status = '0'
-  fraud: string | undefined = undefined;
   type = 1;
   destroy$ = new Subject<boolean>();
 
-  constructor(private service: ProjectService, private alertService: AlertService) { }
+  // Date filter properties initialized with empty strings
+  startDate = '';
+  endDate = '';
+
+  constructor(
+    private service: ProjectService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
-    this.fetchAllTransactions()
+    this.fetchAllTransactions();
   }
 
   ngOnDestroy(): void {
@@ -38,61 +43,39 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
       search_text: this.searchText,
       page_size: this.pageSize,
       page: this.pageIndex,
-      status: this.status,
       product_mode: this.type,
-      fraud: this.fraud
-    }
-    this.service.fetchAllTransactions(params).pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
-      this.loading = false;
-      this.allTransactionsTableData = data;
-      this.allTransactionsData = data.data;
-      this.totalDataRecord = data.total
-    }, () => this.loading = false)
-  }
+      start: this.startDate || undefined, // Send undefined if empty string
+      end: this.endDate || undefined,
+    };
 
-  markAsFraud(id: string) {
-    if (confirm('Are you sure?')) {
-      this.service.markAsFraud(id).pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
-        this.loading = false;
-        this.alertService.success(data['message']);
-        this.fetchAllTransactions();
-      }, () => this.loading = false);
-    }
-  }
-
-  blockCustomer(email: string) {
-    if (confirm('Are you sure?')) {
-      this.service.blacklistCustomer(email).pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
-        this.loading = false;
-        this.alertService.success(data['message']);
-        this.fetchAllTransactions();
-      }, () => this.loading = false);
-    }
-  }
-
-  declineTransaction(id: string) {
-    if (confirm('Are you sure?')) {
-      this.service.declineTransaction(id).pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
-        this.loading = false;
-        this.alertService.success(data['message']);
-        this.fetchAllTransactions();
-      }, () => this.loading = false);
-    }
+    this.service
+      .fetchAllTransactions(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data: any) => {
+          this.loading = false;
+          this.allTransactionsTableData = data;
+          this.allTransactionsData = data.data;
+          this.totalDataRecord = data.total;
+        },
+        () => (this.loading = false)
+      );
   }
 
   searchTransactions(search: string) {
     this.searchText = search;
+    this.pageIndex = 1;
     this.fetchAllTransactions();
   }
 
-
-  filterFraud(fraud: string | undefined) {
-    this.fraud = fraud;
+  filterByDate() {
+    this.pageIndex = 1;
     this.fetchAllTransactions();
   }
 
   filterProductType(type: number) {
     this.type = type;
+    this.pageIndex = 1;
     this.fetchAllTransactions();
   }
 

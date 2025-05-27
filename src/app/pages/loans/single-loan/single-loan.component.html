@@ -23,9 +23,9 @@
                       overflow: hidden;
                     "
                     [src]="
-                      creditDetails.passport
-                        ? creditDetails.passport
-                        : 'https://via.placeholder.com/75'
+                      userDetails.passport
+                        ? userDetails.passport
+                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY3LVj-U_FYhyFPwTSHwephl6o5k5fyojSWyq6qLe8LeQ1tstcAxmkB1U&s'
                     "
                     alt=""
                     width="75"
@@ -598,6 +598,39 @@
                       </span>
                     </dd>
                   </div> -->
+
+                  <div class="col-md-4">
+                    <dt class="text-black-50 text-capitalize whitespace-nowrap">
+                      Linked Bank
+                    </dt>
+                    <dd class="text--500 text--deep-black text-break">
+                      <ng-container
+                        *ngIf="
+                          userDetails?.beneficiary?.length > 0;
+                          else noBanks
+                        "
+                      >
+                        <div
+                          *ngFor="
+                            let bank of userDetails.beneficiary;
+                            let i = index
+                          "
+                          class="mb-2"
+                        >
+                          <strong
+                            >{{ i === 0 ? "Primary" : "Secondary" }}:</strong
+                          >
+                          {{ bank.bank_name }} - {{ bank.account_name }} ({{
+                            bank.account_number
+                          }})
+                        </div>
+                      </ng-container>
+                      <ng-template #noBanks>
+                        No linked bank accounts
+                      </ng-template>
+                    </dd>
+                  </div>
+
                   <div
                     *ngIf="
                       recentCredit.status == '0' ||
