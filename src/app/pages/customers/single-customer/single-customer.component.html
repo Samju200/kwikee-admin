@@ -74,20 +74,20 @@
                     <dt
                       class="text-black-50 text-capitalize whitespace-nowrap col-5"
                     >
-                      email address
+                      BVN
                     </dt>
                     <dd class="text--500 text--deep-black text-break">
-                      {{ customerDetails?.email }}
+                      {{ customerDetails?.bvn }}
                     </dd>
                   </div>
                   <div class="col-4">
                     <dt
                       class="text-black-50 text-capitalize whitespace-nowrap col-5"
                     >
-                      phone number
+                      gender
                     </dt>
                     <dd class="text--500 text--deep-black text-break">
-                      {{ customerDetails?.phone }}
+                      {{ customerDetails?.gender }}
                     </dd>
                   </div>
                   <div class="col-4">
@@ -99,8 +99,8 @@
                     <dd class="text--500 text--deep-black text-break">
                       {{
                         customerDetails?.date_of_birth
-                          ? customerDetails?.date_of_birth
-                          : "N/A"
+                          ? (customerDetails?.date_of_birth | date)
+                          : "-"
                       }}
                     </dd>
                   </div>
@@ -221,8 +221,8 @@
                     </dt>
                     <dd class="text--500 text--deep-black text-break">
                       {{
-                        (customerDetails?.residential_address | titlecase)
-                          ? customerDetails?.residential_address
+                        (customerProfile?.residential_address | titlecase)
+                          ? customerProfile?.residential_address
                           : "N/A"
                       }}
                     </dd>
@@ -459,44 +459,53 @@
                       <table class="table">
                         <thead class="bg-light text-capitalize">
                           <tr>
-                            <th></th>
-                            <th>Date</th>
-                            <th>Credit Limit</th>
-                            <th>Wallet balance</th>
+                            <th scope="col"></th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Amount withdrawn</th>
+                            <th scope="col">Interest Accrued</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>
-                              <a
-                                role="navigation"
-                                [routerLink]="[
-                                  '/credit/view',
-                                  customerLoans.loan_id
-                                ]"
-                                class="btn btn-action"
-                              >
-                                <i class="ri-eye-line ri-xl"></i>View
-                              </a>
-                            </td>
-                            <td>{{ customerLoans.created_at | date }}</td>
-                            <td>
-                              {{
-                                (customerLoans.loan_amount
-                                  ? customerLoans.loan_amount
-                                  : 0
-                                ) | currency : "₦"
-                              }}
-                            </td>
-                            <td>
-                              {{
-                                (customerLoans.wallet_balance
-                                  ? customerLoans.wallet_balance
-                                  : 0
-                                ) | currency : "₦"
-                              }}
-                            </td>
-                          </tr>
+                          <ng-container *ngIf="creditHistory.length">
+                            <tr *ngFor="let credit of creditHistory">
+                              <td>
+                                <button
+                                  (click)="
+                                    openTransactionHistoryModal(
+                                      credit.credit_id
+                                    )
+                                  "
+                                  class="btn btn-sm btn-action"
+                                  type="button"
+                                >
+                                  View
+                                </button>
+                              </td>
+                              <td>
+                                {{
+                                  credit?.repayment_date
+                                    ? (credit?.repayment_date | date)
+                                    : "N/A"
+                                }}
+                              </td>
+                              <td>
+                                {{ credit?.balance | currency : "₦" }}
+                              </td>
+                              <td>
+                                {{ credit?.loan_amount | currency : "₦" }}
+                              </td>
+                              <td>
+                                {{ credit?.amount_withdrawn | currency : "₦" }}
+                              </td>
+                              <td>
+                                {{
+                                  credit?.interest_outstanding | currency : "₦"
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </ng-container>
@@ -718,3 +727,79 @@
     </td>
   </tr>
 </ng-template>
+
+<div class="modal fade" id="transactionsHistoryModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card custom-modal">
+      <div class="card-body">
+        <i
+          (click)="closeTransactionsModal()"
+          role="button"
+          aria-label="Close"
+          class="ri-close-line close-modal"
+        ></i>
+        <h5 class="modal-title text-capitalize">Transaction History</h5>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="bg-light text-capitalize">
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Loan Id</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Bank Name</th>
+                  <th scope="col">Account Number</th>
+                  <th scope="col">Narration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    loanTransactions && loanTransactions.length;
+                    else showNodata
+                  "
+                >
+                  <tr *ngFor="let item of loanTransactions">
+                    <td>
+                      {{ item?.created_at | date }}
+                    </td>
+                    <td>
+                      {{ item?.loan_id }}
+                    </td>
+                    <td>
+                      {{ item?.amount }}
+                    </td>
+                    <td>
+                      <span *ngIf="item?.transaction_type == '1'">
+                        Debit (Successful)
+                      </span>
+                      <span *ngIf="item?.transaction_type == '2'">
+                        Credit (Successful)
+                      </span>
+                      <span *ngIf="item?.transaction_type == '3'">
+                        Debit (Failed)
+                      </span>
+                      <span *ngIf="item?.transaction_type == '4'">
+                        Credit (Failed)
+                      </span>
+                    </td>
+                    <td>
+                      {{ item?.bankcode | bankName }}
+                    </td>
+                    <td>
+                      {{ item?.accountnumber }}
+                    </td>
+                    <td>
+                      {{ item?.narration }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
