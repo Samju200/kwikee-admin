@@ -49,7 +49,14 @@ export class ProjectService {
       .post<any>(`${environment.baseUrl}loan/transactions/list`, params)
       .pipe(map((data) => data.transactions));
   }
-  getAccountEnquiry(params: any): Observable<any> {
+  // In your project.service.ts
+  getAccountEnquiry(params: any, exportType?: string): Observable<any> {
+    const options: { responseType?: 'blob' } = {};
+    if (exportType) {
+      params.export_type = exportType;
+      options.responseType = 'blob'; // Add this for file downloads
+    }
+
     return this.http
       .post<any>(`${environment.baseUrl}accounts/account-enquiry`, params)
       .pipe(map((data) => data));
@@ -621,7 +628,10 @@ export class ProjectService {
       }
     );
   }
-  fundUserCreditByReference(reference: string, amount: number): Observable<any> {
+  fundUserCreditByReference(
+    reference: string,
+    amount: number
+  ): Observable<any> {
     return this.http.post(
       `${environment.baseUrl}admin/fund-user-credit-by-reference`,
       {
