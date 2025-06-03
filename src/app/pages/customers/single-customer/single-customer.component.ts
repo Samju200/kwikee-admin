@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '@core/services/project.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
+// import * as bootstrap from 'bootstrap';
+import { modalOptions } from '@shared/utils/extra';
 
 @Component({
   selector: 'app-single-customer',
@@ -25,6 +28,7 @@ export class SingleCustomerComponent implements OnInit {
   customerSavings: any[] = [];
   customerTransactions: any[] = [];
   destroy$ = new Subject<boolean>();
+
   constructor(
     private service: ProjectService,
     private activatedROute: ActivatedRoute
@@ -39,6 +43,18 @@ export class SingleCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.transactionsHistoryModal = new Modal(
+      '#transactionsHistoryModal',
+      modalOptions
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
 
   fetchUserDetails(loading = true) {
     this.loading = loading;
@@ -108,14 +124,14 @@ export class SingleCustomerComponent implements OnInit {
     this.service
       .fetchTransactionsHistory(credit_id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (data: any) => {
+      .subscribe({
+        next: (data: any) => {
           this.loading = false;
           this.loanTransactions = data.credit.transactions;
           this.openTransactionsModal();
         },
-        () => (this.loading = false)
-      );
+        error: () => (this.loading = false),
+      });
   }
 
   openTransactionsModal() {

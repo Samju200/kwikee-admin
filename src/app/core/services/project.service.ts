@@ -51,16 +51,24 @@ export class ProjectService {
   }
   // In your project.service.ts
   getAccountEnquiry(params: any, exportType?: string): Observable<any> {
-    const options: { responseType?: 'blob' } = {};
+    const url = `${environment.baseUrl}accounts/account-enquiry`;
+
     if (exportType) {
       params.export_type = exportType;
-      options.responseType = 'blob'; // Add this for file downloads
+      return this.http
+        .post(url, params, {
+          responseType: 'blob',
+          observe: 'response', // This ensures you get the full response
+        })
+        .pipe(
+          map((response) => response.body) // Extract the body which is the blob
+        );
     }
 
-    return this.http
-      .post<any>(`${environment.baseUrl}accounts/account-enquiry`, params)
-      .pipe(map((data) => data));
+    // Normal JSON response
+    return this.http.post<any>(url, params);
   }
+
   validateInternalAccount(account_no: string) {
     return this.http.get(
       `${environment.baseUrl}accounts/validate-internal-account/${account_no}`

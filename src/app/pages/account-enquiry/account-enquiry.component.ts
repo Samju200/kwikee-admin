@@ -82,13 +82,14 @@ export class AccountEnquiryComponent implements OnInit {
       }
 
       this.service
-        .getAccountEnquiry(formValues)
+        .getAccountEnquiry(formValues, exportType)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (data: any) => {
             if (exportType) {
               // Handle file download
               this.downloadFile(data, exportType);
+              this.isLoading = false;
             } else {
               // Normal transaction display
               this.showTransactions = true;
@@ -102,35 +103,47 @@ export class AccountEnquiryComponent implements OnInit {
               }
             }
           },
-          error: () => {
+          error: (err) => {
             this.isLoading = false;
+            console.error('Download failed:', err);
+
+            // If backend sends an error in Blob, read it:
+            if (err.error instanceof Blob) {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const errorMessage = JSON.parse(reader.result as string);
+                this.alertService.error(
+                  errorMessage.message || 'Download failed'
+                );
+              };
+              reader.readAsText(err.error);
+            } else {
+              this.alertService.error(err.message || 'Download failed');
+            }
           },
         });
     }
   }
 
-  private downloadFile(data: Blob, type: string) {
-    this.isLoading = false;
+  downloadFile(data: Blob, type: string) {
+    // Create a blob URL for the file
+    const blobUrl = window.URL.createObjectURL(data);
 
-    // Create download link
-    const blob = new Blob([data], {
-      type: type === 'pdf' ? 'application/pdf' : 'text/csv',
-    });
-    const url = window.URL.createObjectURL(blob);
+    // Create a temporary anchor element to trigger the download
+    const link = document.createElement('a');
+    link.href = blobUrl;
 
-    // Create hidden anchor element
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `account_statement_${new Date().getTime()}.${type}`;
+    // Set the appropriate file extension
+    const extension = type === 'pdf' ? 'pdf' : 'csv';
+    link.download = `account_statement_${new Date().getTime()}.${extension}`;
 
-    // Trigger download
-    document.body.appendChild(a);
-    a.click();
+    // Append to body, click and then remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    // Cleanup
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+    // Release the blob URL
+    window.URL.revokeObjectURL(blobUrl);
   }
 
   exportToPdf() {
