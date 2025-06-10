@@ -1,7 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
-  ChartComponent,
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
@@ -12,8 +11,8 @@ import {
   ApexFill,
   ApexMarkers,
   ApexYAxis,
-  ApexTooltip
-} from "ng-apexcharts";
+  ApexTooltip,
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -25,99 +24,122 @@ export type ChartOptions = {
   markers: ApexMarkers;
   yaxis: ApexYAxis;
   stroke: ApexStroke;
-  colors: any;
+  colors: string[];
   legend: any;
   title: ApexTitleSubtitle;
-  tooltip: ApexTooltip
+  tooltip: ApexTooltip;
 };
 
 @Component({
   selector: 'single-line-graph',
   templateUrl: './single-line-graph.component.html',
-  styleUrls: ['./single-line-graph.component.scss']
+  styleUrls: ['./single-line-graph.component.scss'],
 })
-export class SingleLineGraphComponent implements OnInit, AfterViewInit {
-  graphDataAsArray!: { x: string; y: any; }[];
-  @ViewChild('singleLineGraph') set singleLineGraphRef(ref: ChartComponent) {
-    if (!!ref) {
-      this.singleLineGraphTmpl = ref;
-    }
-  }
-  @Input() set graphData(graphObj: any) {
-    const graphArray = []
-    for (const key in graphObj) {
-      if (Object.prototype.hasOwnProperty.call(graphObj, key)) {
-        const element = graphObj[key];
-        graphArray.push({x: key, y: element})
-      }
-    }
-    this.graphDataAsArray = graphArray;
-  }
-  @Input() seriesName: string | undefined;
-  @Input() toolTipName: string | undefined;
-  singleLineGraphTmpl: any;
-  public chartOptions: Partial<ChartOptions> | any;
-  constructor(currencyPipe: CurrencyPipe) {
+export class SingleLineGraphComponent implements OnChanges {
+  @Input() graphData: any;
+  @Input() seriesName: string = '';
+  @Input() toolTipName: string = '';
+
+  public chartOptions: ChartOptions;
+
+  constructor(private currencyPipe: CurrencyPipe) {
     this.chartOptions = {
+      series: [],
       chart: {
         height: 350,
-        type: "area",
+        type: 'line',
         zoom: {
-          enabled: false
+          enabled: false,
         },
         stacked: false,
         fontFamily: 'C-book',
         toolbar: {
           show: false,
-        }
+        },
       },
       colors: ['#1633a3'],
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
-        width: 5,
-        curve: "smooth"
+        width: 3,
+        curve: 'smooth',
       },
-
       xaxis: {
-        type: 'category'
+        type: 'category',
+      },
+      grid: {
+        show: true,
+        borderColor: '#e7e7e7',
+        strokeDashArray: 4,
       },
       fill: {
-        type: "gradient",
+        type: 'gradient',
       },
       markers: {
-        size: 0,
-        // colors: ["#FFA41B"],
-        strokeColors: "#fff",
+        size: 5,
+        strokeColors: '#fff',
         strokeWidth: 2,
         hover: {
-          size: 7
-        }
+          size: 7,
+        },
       },
       yaxis: {
         tickAmount: 6,
         labels: {
-          formatter: (value: number) => { return currencyPipe.transform(value, ' ') }
-        }
+          formatter: (value: number) => {
+            return currencyPipe.transform(value, ' ') || '';
+          },
+        },
       },
       legend: {
-        show: false
+        show: false,
       },
       tooltip: {
-        enabled: true
-      }
+        enabled: true,
+        y: {
+          formatter: (value: number) => {
+            return currencyPipe.transform(value, ' ') || '';
+          },
+        },
+      },
+      title: {
+        text: this.seriesName,
+        align: 'left',
+      },
     };
   }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['graphData'] && this.graphData) {
+      this.updateChartData();
+    }
+
+    if (changes['seriesName']) {
+      this.chartOptions.title = {
+        ...this.chartOptions.title,
+        text: this.seriesName,
+      };
+    }
   }
 
-  ngAfterViewInit() {
-    this.singleLineGraphTmpl.series = [{ name: this.toolTipName, data: this.graphDataAsArray }]
-    this.singleLineGraphTmpl.title = {
-      text: this.seriesName,
-      align: "left"
+  private updateChartData(): void {
+    const graphArray = [];
+
+    for (const key in this.graphData) {
+      if (Object.prototype.hasOwnProperty.call(this.graphData, key)) {
+        graphArray.push({
+          x: key,
+          y: this.graphData[key],
+        });
+      }
     }
+
+    this.chartOptions.series = [
+      {
+        name: this.toolTipName,
+        data: graphArray,
+      },
+    ];
   }
 }

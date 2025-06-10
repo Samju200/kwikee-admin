@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { ProjectService } from '@core/services/project.service';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +45,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isFetchingDashboard = true;
     this.service
       .getDashboardData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.isFetchingDashboard = false))
+      )
       .subscribe({
         next: (data: any) => {
           this.isFetchingDashboard = false;
@@ -57,9 +60,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
           this.lastApproved = data.last_approved;
           this.lastDeclined = data.last_declined;
-          this.lastPendingUnderwriting = data.last_pending_underwriting;
+          // this.lastPendingUnderwriting = data.last_pending_underwriting;
           this.lastKwikgoals = data.last_kwikgoals;
-          this.lastKwikLite = data.last_kwiklite;
+          // this.lastKwikLite = data.last_kwiklite;
           this.lastKwikMax = data.last_kwikmax;
           this.graphData = data.disbursed_last_7_days;
         },
