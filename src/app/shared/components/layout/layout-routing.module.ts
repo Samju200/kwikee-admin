@@ -119,6 +119,32 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'kwikgoal-rate',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () =>
+              import('../../../pages/kwikgoalrate/kwikgoalrate.module').then(
+                (m) => m.KwikgoalrateModule
+              ),
+          },
+        ],
+      },
+      {
+        path: 'credit-rate',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () =>
+              import('../../../pages/credit-rate/credit-rate.module').then(
+                (m) => m.CreditRateModule
+              ),
+          },
+        ],
+      },
+      {
         path: 'send-notifications',
         loadChildren: () =>
           import(

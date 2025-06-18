@@ -1,120 +1,182 @@
 <div>
-    <div class="greetings-area mt-5">
-      <div class="row justify-content-between">
-        <div class="col-md-6 col-lg-5">
-          <h4>Kwik Max Savings</h4>
-          <p>View all your kwik-max savings</p>
-        </div>
+  <div class="greetings-area mt-5">
+    <div class="row justify-content-between">
+      <div class="col-md-6 col-lg-5">
+        <h4>Kwik Max Savings</h4>
+        <p>View all your kwik-max savings</p>
       </div>
     </div>
-    <div class="mt-5">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <div class="greetings-area my-3">
-                <div class="col">
-                  <h5>Recent Kwik Max Savings</h5>
-                  <p>View your kwik-max savings history</p>
-                </div>
+  </div>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="greetings-area my-3">
+              <div class="col">
+                <h5>Recent Kwik Max Savings</h5>
+                <p>View your kwik-max savings history</p>
               </div>
-              <div>
-                <loading-spinner [spinning]="loading">
-                  <div class="">
-                    <div class="row mt-2 mb-4">
-                      <div class="col-auto">
-                        <search-input (searchTextEvent)="searchSavings($event)"></search-input>
-                      </div>
-                      <div *ngIf="type == '1'" class="col-md-3">
-                        <label for="fraud-filter" class="visually-hidden">Filter</label>
-                        <div class="customcontrol">
-                          <div class="customcontrol-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                              <path fill="none" d="M0 0H24V24H0z" />
-                              <path
-                                d="M21 4v2h-1l-5 7.5V22H9v-8.5L4 6H3V4h18zM6.404 6L11 12.894V20h2v-7.106L17.596 6H6.404z" />
-                            </svg>
-                          </div>
-                          <select id="fraud-filter" (ngModelChange)="filterStatus($event)" [(ngModel)]="status"
-                            class="customcontrol-select w-100">
-                            <!-- <option value="0">Incomplete</option> -->
-                            <option value="1">Active Applications</option>
-                            <!-- <option value="2">Completed </option>
+            </div>
+            <div>
+              <loading-spinner [spinning]="loading">
+                <div class="">
+                  <div class="row mt-2 mb-4">
+                    <div class="col-auto">
+                      <search-input
+                        (searchTextEvent)="searchSavings($event)"
+                      ></search-input>
+                    </div>
+                    <div *ngIf="type == '1'" class="col-md-3">
+                      <label for="fraud-filter" class="visually-hidden"
+                        >Filter</label
+                      >
+                      <div class="customcontrol">
+                        <div class="customcontrol-icon">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                          >
+                            <path fill="none" d="M0 0H24V24H0z" />
+                            <path
+                              d="M21 4v2h-1l-5 7.5V22H9v-8.5L4 6H3V4h18zM6.404 6L11 12.894V20h2v-7.106L17.596 6H6.404z"
+                            />
+                          </svg>
+                        </div>
+                        <select
+                          id="fraud-filter"
+                          (ngModelChange)="filterStatus($event)"
+                          [(ngModel)]="status"
+                          class="customcontrol-select w-100"
+                        >
+                          <!-- <option value="0">Incomplete</option> -->
+                          <option value="1">Active Applications</option>
+                          <!-- <option value="2">Completed </option>
                             <option value="3">Rollover Request</option>
                             <option value="4">Failed Payments</option>
                             <option value="5">Cancelled</option> -->
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-auto ms-auto" *ngIf="allSavingsData && allSavingsData.length">
-                        <button type="button" class="btn btn-outline-dark" (click)="exportKwikMaxList()">Export</button>
+                        </select>
                       </div>
                     </div>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead class="bg-light text-capitalize">
-                          <tr>
-                            <th scope="col">&nbsp;</th>
-                            <th scope="col">Name</th>
-                            <th scope="col" >Start Date</th>
-                            <th scope="col">Target Month</th>
-                            <th scope="col">Target Amount</th>
-                            <th scope="col" >Maturity Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <ng-container *ngIf="allSavingsData && allSavingsData.length; else showNodata">
-                            <tr *ngFor="let saving of allSavingsData">
-                              <td>
-                                <a [routerLink]="['view', saving?.id]"  class="btn btn-action"><i class="ri-eye-line ri-xl"></i>View</a>
-                              </td>
-                              <td>{{saving?.firstname | titlecase}} {{saving?.lastname | titlecase}}</td>
-                              <td >
-                                <span class="text-blue-badge">{{saving?.start_date ? (saving.start_date | date) : 'Null'}}</span>
-                              </td>
-                              <td >
-                                <span class="text-blue-badge">{{saving?.month_spent ? (saving.month_spent | titlecase) : 'None'}}</span>
-                              </td>
-                              <td>
-                                {{(saving?.amount ? saving?.amount : 0) | currency:'₦': 'symbol':'1.2'}}
-                              </td>
-                              <td>
-                                {{saving?.maturity_date?  (saving?.maturity_date | date) : 'None'}}
-                              </td>
-                            </tr>
-                          </ng-container>
-                        </tbody>
-                      </table>
+                    <div
+                      class="col-auto ms-auto"
+                      *ngIf="allSavingsData && allSavingsData.length"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-outline-dark"
+                        (click)="exportKwikMaxList()"
+                      >
+                        Export
+                      </button>
                     </div>
-                    <kb-pagination (pageSizeChanged)="pageSizeChanged($event)"
-                      [itemsFrom]="allSavingsTableData?.from" [itemsEnd]="allSavingsTableData?.to"
-                      [total-items]="totalDataRecord" [items-per-page]="pageSize" (pageChanged)="paginateData($event)">
-                    </kb-pagination>
                   </div>
-                </loading-spinner>
-              </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="bg-light text-capitalize">
+                        <tr>
+                          <th scope="col">&nbsp;</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Start Date</th>
+                          <th scope="col">Target Month</th>
+                          <th scope="col">Target Amount</th>
+                          <th scope="col">Maturity Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container
+                          *ngIf="
+                            allSavingsData && allSavingsData.length;
+                            else showNodata
+                          "
+                        >
+                          <tr *ngFor="let saving of allSavingsData">
+                            <td>
+                              <a
+                                [routerLink]="['view', saving?.id]"
+                                class="btn btn-action"
+                                ><i class="ri-eye-line ri-xl"></i>View</a
+                              >
+                            </td>
+                            <td>
+                              {{ saving?.first_name | titlecase }}
+                              {{ saving?.last_name | titlecase }}
+                            </td>
+                            <td>
+                              <span class="text-blue-badge">{{
+                                saving?.start_date
+                                  ? (saving.start_date | date)
+                                  : "Null"
+                              }}</span>
+                            </td>
+                            <td>
+                              <span class="text-blue-badge">{{
+                                saving?.month_spent
+                                  ? (saving.month_spent | titlecase)
+                                  : "None"
+                              }}</span>
+                            </td>
+                            <td>
+                              {{
+                                (saving?.amount ? saving?.amount : 0)
+                                  | currency : "₦" : "symbol" : "1.2"
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                saving?.maturity_date
+                                  ? (saving?.maturity_date | date)
+                                  : "None"
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <kb-pagination
+                    (pageSizeChanged)="pageSizeChanged($event)"
+                    [itemsFrom]="allSavingsTableData?.from"
+                    [itemsEnd]="allSavingsTableData?.to"
+                    [total-items]="totalDataRecord"
+                    [items-per-page]="pageSize"
+                    (pageChanged)="paginateData($event)"
+                  >
+                  </kb-pagination>
+                </div>
+              </loading-spinner>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
-  <ng-template #showNodata>
-    <tr>
-      <td colspan="100%">
-        <div class="p-3 d-flex align-items-center flex-column justify-content-center">
-          <svg style="width: 1.5rem; height: 1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-            </path>
-          </svg>
-          <span style="font-size: 14px">
-            No data
-          </span>
-        </div>
-      </td>
-    </tr>
-  </ng-template>
-  
+</div>
+
+<ng-template #showNodata>
+  <tr>
+    <td colspan="100%">
+      <div
+        class="p-3 d-flex align-items-center flex-column justify-content-center"
+      >
+        <svg
+          style="width: 1.5rem; height: 1.5rem"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <span style="font-size: 14px"> No data </span>
+      </div>
+    </td>
+  </tr>
+</ng-template>

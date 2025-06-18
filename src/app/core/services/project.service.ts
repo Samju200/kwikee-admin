@@ -648,4 +648,19 @@ export class ProjectService {
       }
     );
   }
+
+  getCurrentRate() {
+    return this.http.get(`${environment.baseUrl}loan/kwikgoal/rate`);
+  }
+
+  updateRate(rate: number) {
+    return this.http.post(`${environment.baseUrl}loan/kwikgoal/rate`, { rate });
+  }
+  getLoanSettings() {
+    return this.http.get<any>(`${environment.baseUrl}loan/credit/rate`);
+  }
+
+  updateLoanSettings(data: any) {
+    return this.http.put<any>(`${environment.baseUrl}loan/credit/rate`, data);
+  }
 }
