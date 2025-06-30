@@ -1,0 +1,232 @@
+<div class="greetings-area mt-5">
+  <div class="row justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <h4>Mandate Details</h4>
+      <p>View and manage payment mandate</p>
+    </div>
+    <div class="col-md-6 col-lg-5 text-end">
+      <button [routerLink]="['/mandate']" class="btn btn-action">
+        <i class="ri-arrow-left-line"></i> Back to Mandates
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <loading-spinner style="min-height: 500px" [spinning]="loading">
+    <ng-container *ngIf="mandate">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+                <h5 class="mb-0">Mandate Information</h5>
+                <span class="badge" [ngClass]="getStatusClass(mandate.status)">
+                  {{ getStatusDisplay(mandate.status) }}
+                </span>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <dl class="row">
+                    <dt class="col-sm-4">Reference:</dt>
+                    <dd class="col-sm-8">{{ mandate.reference }}</dd>
+
+                    <dt class="col-sm-4">Account Name:</dt>
+                    <dd class="col-sm-8">{{ mandate.account_name }}</dd>
+
+                    <dt class="col-sm-4">Amount:</dt>
+                    <dd class="col-sm-8">
+                      {{
+                        mandate.amount / 100
+                          | currency : "₦" : "symbol" : "1.2-2"
+                      }}
+                    </dd>
+
+                    <dt class="col-sm-4">Balance:</dt>
+                    <dd class="col-sm-8">
+                      {{
+                        mandate.balance / 100
+                          | currency : "₦" : "symbol" : "1.2-2"
+                      }}
+                    </dd>
+                    <dt class="col-sm-4">Mandate Type:</dt>
+                    <dd class="col-sm-8">
+                      {{ getMandateTypeDisplay(mandate.mandate_type) }}
+                    </dd>
+                  </dl>
+                </div>
+
+                <div class="col-md-6">
+                  <dl class="row">
+                    <dt class="col-sm-4">Start Date:</dt>
+                    <dd class="col-sm-8">{{ mandate.start_date | date }}</dd>
+
+                    <dt class="col-sm-4">End Date:</dt>
+                    <dd class="col-sm-8">{{ mandate.end_date | date }}</dd>
+
+                    <dt class="col-sm-4">Created At:</dt>
+                    <dd class="col-sm-8">{{ mandate.date | date }}</dd>
+
+                    <dt class="col-sm-4">Debit Type:</dt>
+                    <dd class="col-sm-8">
+                      {{ getDebitTypeDisplay(mandate.debit_type) }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h6>Bank Details</h6>
+                <div class="row">
+                  <div class="col-md-6">
+                    <dl class="row">
+                      <dt class="col-sm-4">Bank Name:</dt>
+                      <dd class="col-sm-8">{{ mandate.institution.name }}</dd>
+
+                      <dt class="col-sm-4">Account Number:</dt>
+                      <dd class="col-sm-8">{{ mandate.account_number }}</dd>
+
+                      <dt class="col-sm-4">Bank Code:</dt>
+                      <dd class="col-sm-8">
+                        {{ mandate.institution.bank_code }}
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-6">
+                    <dl class="row">
+                      <dt class="col-sm-4">NIP Code:</dt>
+                      <dd class="col-sm-8">
+                        {{ mandate.institution.nip_code }}
+                      </dd>
+
+                      <dt class="col-sm-4">NIBSS Code:</dt>
+                      <dd class="col-sm-8">{{ mandate.nibss_code }}</dd>
+
+                      <dt class="col-sm-4">Live Mode:</dt>
+                      <dd class="col-sm-8">
+                        {{ mandate.live_mode ? "Yes" : "No" }}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h6>Additional Information</h6>
+                <div class="row">
+                  <div class="col-md-12">
+                    <dl class="row">
+                      <dt class="col-sm-2">Narration:</dt>
+                      <dd class="col-sm-10">{{ mandate.narration }}</dd>
+
+                      <dt class="col-sm-2">Redirect URL:</dt>
+                      <dd class="col-sm-10">
+                        <a [href]="mandate.redirect_url" target="_blank">{{
+                          mandate.redirect_url
+                        }}</a>
+                      </dd>
+
+                      <dt class="col-sm-2">Customer ID:</dt>
+                      <dd class="col-sm-10">{{ mandate.customer }}</dd>
+
+                      <dt class="col-sm-2">Ready to Debit:</dt>
+                      <dd class="col-sm-10">
+                        {{ mandate.ready_to_debit ? "Yes" : "No" }}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 d-flex gap-2">
+                <button
+                  *ngIf="mandate.status === 'approved'"
+                  (click)="pauseMandate()"
+                  class="btn btn-warning"
+                >
+                  <i class="ri-pause-line"></i> Pause Mandate
+                </button>
+
+                <button
+                  *ngIf="mandate.status === 'paused'"
+                  (click)="reinstateMandate()"
+                  class="btn btn-success"
+                >
+                  <i class="ri-play-line"></i> Reinstate Mandate
+                </button>
+
+                <button
+                  *ngIf="mandate.status !== 'cancelled'"
+                  (click)="cancelMandate()"
+                  class="btn btn-danger"
+                >
+                  <i class="ri-close-line"></i> Cancel Mandate
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="mb-4">Transaction History</h5>
+
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class="bg-light">
+                    <tr>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Reference</th>
+                      <th>Narration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        transactions && transactions.length;
+                        else noTransactions
+                      "
+                    >
+                      <tr *ngFor="let tx of transactions">
+                        <td>{{ tx.date | date }}</td>
+                        <td>{{ tx.amount | currency : "₦" }}</td>
+                        <td>
+                          <span
+                            [ngClass]="{
+                              'badge bg-success': tx.status === 'success',
+                              'badge bg-warning': tx.status === 'pending',
+                              'badge bg-danger': tx.status === 'failed'
+                            }"
+                          >
+                            {{ tx.status | titlecase }}
+                          </span>
+                        </td>
+                        <td>{{ tx.reference }}</td>
+                        <td>{{ tx.narration }}</td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noTransactions>
+                      <tr>
+                        <td colspan="5" class="text-center py-4">
+                          No transactions found for this mandate
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </ng-container>
+  </loading-spinner>
+</div>

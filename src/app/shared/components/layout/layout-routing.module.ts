@@ -51,6 +51,26 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'mandate',
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import(
+                '../../../pages/mandate/single-mandate/single-mandate.module'
+              ).then((m) => m.SingleMandateModule),
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () =>
+              import(
+                '../../../pages/mandate/list-mandate/list-mandate.module'
+              ).then((m) => m.ListMandateModule),
+          },
+        ],
+      },
+      {
         path: 'credit',
         children: [
           {

@@ -39,6 +39,14 @@ interface PaginatedResponse<T> {
   current_page: number;
   last_page: number;
 }
+interface Mandate {
+  id: string;
+  status: string;
+  created_at: string;
+  account_id: string;
+  // Add other mandate properties as needed
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   constructor(private http: HttpClient) {}

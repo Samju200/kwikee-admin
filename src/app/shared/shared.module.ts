@@ -7,13 +7,9 @@ import { SearchInputModule } from './components/search-input/search-input.module
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchFilterModule } from './pipes/search-filter/search-filter.module';
 
-
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     PaginationModule,
     LoadingSpinnerModule,
@@ -22,6 +18,6 @@ import { SearchFilterModule } from './pipes/search-filter/search-filter.module';
     BankNameModule,
     SearchFilterModule,
     SearchInputModule,
-  ]
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}
