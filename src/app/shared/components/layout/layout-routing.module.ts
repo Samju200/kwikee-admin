@@ -124,6 +124,22 @@ const routes: Routes = [
             (m) => m.FundTransferModule
           ),
       },
+      {
+        path: 'chart',
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('../../../pages/chart/chart.module').then(
+            (m) => m.ChartModule
+          ),
+      },
+      {
+        path: 'add-newgl', // Remove the leading slash
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('../../../pages/dialog/dialog/dialog.module').then(
+            (m) => m.DialogModule
+          ),
+      },
 
       {
         path: 'kwikmax-rates',

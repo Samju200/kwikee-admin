@@ -1,0 +1,181 @@
+<div class="container-fluid">
+  <div class="d-flex flex-row justify-content-end">
+    <button class="btn btn-primary my-3" (click)="openForm()">
+      <i class="fa fa-plus mr-2" aria-hidden="true"></i>
+      Add New GL
+    </button>
+  </div>
+
+  <div>
+    <div>
+      <div
+        (click)="changeAssets()"
+        class="total d-flex justify-content-between headBtn"
+      >
+        <h6 class="mb-0">ASSETS</h6>
+        <div [ngStyle]="{ color: totalAssets < 0 ? 'red' : 'green' }">
+          {{ totalAssets | currency : "₦" }}
+        </div>
+      </div>
+      <div *ngIf="assetState" class="tabbody">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Account Number</th>
+              <th>GL Name</th>
+              <th class="balClass">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let asset of assets">
+              <td>{{ asset.number }}</td>
+              <td>{{ asset.name }}</td>
+              <td
+                *ngIf="asset.balance <= -1"
+                [ngStyle]="{ color: 'red' }"
+                class="balClass"
+              >
+                ( {{ asset.balance | currency : "₦" }} )
+              </td>
+              <td *ngIf="asset.balance >= 0" class="balClass">
+                {{ asset.balance | currency : "₦" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>
+      <div
+        (click)="changeLiability()"
+        class="total d-flex justify-content-between headBtn"
+      >
+        <h6 class="mb-0">LIABILITIES</h6>
+        <div
+          [ngStyle]="{ color: totalLiability < 0 ? 'red' : 'green' }"
+          class="total test"
+        >
+          {{ totalLiability | currency : "₦" }}
+        </div>
+      </div>
+      <div *ngIf="liabilityState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Account Number</th>
+              <th>GL Name</th>
+              <th class="balClass">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let liability of liabilities">
+              <td>{{ liability.number }}</td>
+              <td>{{ liability.name }}</td>
+              <td
+                *ngIf="liability.balance <= -1"
+                [ngStyle]="{ color: 'red' }"
+                class="balClass"
+              >
+                ( {{ liability.balance | currency : "₦" }} )
+              </td>
+              <td *ngIf="liability.balance >= 0" class="balClass">
+                {{ liability.balance | currency : "₦" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>
+      <div
+        (click)="changeIncome()"
+        class="total d-flex justify-content-between headBtn"
+      >
+        <h6 class="mb-0">INCOME</h6>
+        <div
+          [ngStyle]="{ color: totalIncome < 0 ? 'red' : 'green' }"
+          class="total test"
+        >
+          {{ totalIncome | currency : "₦" }}
+        </div>
+      </div>
+      <div *ngIf="incomeState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Account Number</th>
+              <th>GL Name</th>
+              <th class="balClass">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let income of incomes">
+              <td>{{ income.number }}</td>
+              <td>{{ income.name }}</td>
+              <td
+                *ngIf="income.balance <= -1"
+                [ngStyle]="{ color: 'red' }"
+                class="balClass"
+              >
+                {{ income.balance | currency : "₦" }}
+              </td>
+              <td *ngIf="income.balance >= 0" class="balClass">
+                {{ income.balance | currency : "₦" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>
+      <div
+        (click)="changeExpenditure()"
+        class="total d-flex justify-content-between headBtn"
+      >
+        <h6 class="mb-0">EXPENDITURES</h6>
+        <div
+          [ngStyle]="{ color: totalExpenditure < 0 ? 'red' : 'green' }"
+          class="total test"
+        >
+          {{ totalExpenditure | currency : "₦" }}
+        </div>
+      </div>
+      <div *ngIf="expenditureState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Account Number</th>
+              <th>GL Name</th>
+              <th class="balClass">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let expenditure of expenditures">
+              <td>{{ expenditure.number }}</td>
+              <td>{{ expenditure.name }}</td>
+              <td
+                *ngIf="expenditure.balance <= -1"
+                [ngStyle]="{ color: 'red' }"
+                class="balClass"
+              >
+                ( {{ expenditure.balance | currency : "₦" }} )
+              </td>
+              <td *ngIf="expenditure.balance >= 0" class="balClass">
+                {{ expenditure.balance | currency : "₦" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

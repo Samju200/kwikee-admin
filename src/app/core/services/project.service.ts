@@ -671,4 +671,10 @@ export class ProjectService {
   updateLoanSettings(data: any) {
     return this.http.put<any>(`${environment.baseUrl}loan/credit/rate`, data);
   }
+  getChartOfAccounts() {
+    return this.http.get(`${environment.baseUrl}finance/gls`);
+  }
+  addNewGl(data: any) {
+    return this.http.post(`${environment.baseUrl}finance/add-new-gl`, data);
+  }
 }
