@@ -1,181 +1,312 @@
-<div class="container-fluid">
-  <div class="d-flex flex-row justify-content-end">
-    <button class="btn btn-primary my-3" (click)="openForm()">
-      <i class="fa fa-plus mr-2" aria-hidden="true"></i>
-      Add New GL
-    </button>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financial Account Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fc;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-  <div>
-    <div>
-      <div
-        (click)="changeAssets()"
-        class="total d-flex justify-content-between headBtn"
-      >
-        <h6 class="mb-0">ASSETS</h6>
-        <div [ngStyle]="{ color: totalAssets < 0 ? 'red' : 'green' }">
-          {{ totalAssets | currency : "₦" }}
+      .container-fluid {
+        padding: 30px;
+      }
+
+      /* Add New GL Button */
+      .btn-primary {
+        background-color: #3e4095;
+        border-color: #3e4095;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .btn-primary:hover {
+        background-color: #2a2b6b;
+        border-color: #2a2b6b;
+      }
+
+      /* Section Header */
+      .headBtn {
+        padding: 18px 20px;
+        border: 1px solid #3e4095;
+        border-radius: 10px;
+        cursor: pointer;
+        color: #3e4095;
+        margin-bottom: 12px;
+        background-color: #ffffff;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .headBtn:hover {
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px;
+      }
+
+      /* Table Container */
+      .tabbody {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
+        margin: 20px 0;
+        overflow: hidden;
+        transition: all ease-in-out 0.3s;
+      }
+
+      table {
+        font-size: 13.5px;
+        margin-bottom: 0;
+      }
+
+      thead {
+        background-color: #f5f6fa;
+        color: #3e4095;
+        font-weight: 600;
+      }
+
+      th {
+        border-bottom: 1px solid #e5e7eb !important;
+      }
+
+      td {
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .balClass {
+        text-align: right;
+      }
+
+      .negative {
+        color: #d32f2f !important;
+        font-weight: 600;
+      }
+
+      .positive {
+        color: #2e7d32 !important;
+        font-weight: 600;
+      }
+
+      .total {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+      }
+
+      /* Subtle hover row effect */
+      tbody tr:hover {
+        background-color: #f9fafc;
+        transition: background-color 0.2s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="d-flex flex-row justify-content-end">
+        <button class="btn btn-primary my-3" (click)="openForm()">
+          <i class="fa fa-plus me-2" aria-hidden="true"></i>
+          Add New GL
+        </button>
+      </div>
+
+      <!-- ASSETS -->
+      <div>
+        <div>
+          <div
+            (click)="changeAssets()"
+            class="total d-flex justify-content-between align-items-center headBtn"
+          >
+            <h6 class="mb-0">ASSETS</h6>
+            <div [ngStyle]="{ color: totalAssets < 0 ? 'red' : 'green' }">
+              {{ totalAssets | currency : "₦" }}
+            </div>
+          </div>
+          <div *ngIf="assetState" class="tabbody p-3">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>GL Name</th>
+                  <th class="balClass">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let asset of assets">
+                  <td>{{ asset.number }}</td>
+                  <td>{{ asset.name }}</td>
+                  <td
+                    *ngIf="asset.balance <= -1"
+                    [ngStyle]="{ color: 'red' }"
+                    class="balClass"
+                  >
+                    ( {{ asset.balance | currency : "₦" }} )
+                  </td>
+                  <td *ngIf="asset.balance >= 0" class="balClass positive">
+                    {{ asset.balance | currency : "₦" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div *ngIf="assetState" class="tabbody">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let asset of assets">
-              <td>{{ asset.number }}</td>
-              <td>{{ asset.name }}</td>
-              <td
-                *ngIf="asset.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
-                class="balClass"
-              >
-                ( {{ asset.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="asset.balance >= 0" class="balClass">
-                {{ asset.balance | currency : "₦" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <div>
-    <div>
-      <div
-        (click)="changeLiability()"
-        class="total d-flex justify-content-between headBtn"
-      >
-        <h6 class="mb-0">LIABILITIES</h6>
-        <div
-          [ngStyle]="{ color: totalLiability < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalLiability | currency : "₦" }}
+      <!-- LIABILITIES -->
+      <div>
+        <div>
+          <div
+            (click)="changeLiability()"
+            class="total d-flex justify-content-between align-items-center headBtn"
+          >
+            <h6 class="mb-0">LIABILITIES</h6>
+            <div
+              [ngStyle]="{ color: totalLiability < 0 ? 'red' : 'green' }"
+              class="total test"
+            >
+              {{ totalLiability | currency : "₦" }}
+            </div>
+          </div>
+          <div *ngIf="liabilityState" class="tabbody p-3">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>GL Name</th>
+                  <th class="balClass">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let liability of liabilities">
+                  <td>{{ liability.number }}</td>
+                  <td>{{ liability.name }}</td>
+                  <td
+                    *ngIf="liability.balance <= -1"
+                    [ngStyle]="{ color: 'red' }"
+                    class="balClass"
+                  >
+                    ( {{ liability.balance | currency : "₦" }} )
+                  </td>
+                  <td *ngIf="liability.balance >= 0" class="balClass positive">
+                    {{ liability.balance | currency : "₦" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div *ngIf="liabilityState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let liability of liabilities">
-              <td>{{ liability.number }}</td>
-              <td>{{ liability.name }}</td>
-              <td
-                *ngIf="liability.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
-                class="balClass"
-              >
-                ( {{ liability.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="liability.balance >= 0" class="balClass">
-                {{ liability.balance | currency : "₦" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <div>
-    <div>
-      <div
-        (click)="changeIncome()"
-        class="total d-flex justify-content-between headBtn"
-      >
-        <h6 class="mb-0">INCOME</h6>
-        <div
-          [ngStyle]="{ color: totalIncome < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalIncome | currency : "₦" }}
+      <!-- INCOME -->
+      <div>
+        <div>
+          <div
+            (click)="changeIncome()"
+            class="total d-flex justify-content-between align-items-center headBtn"
+          >
+            <h6 class="mb-0">INCOME</h6>
+            <div
+              [ngStyle]="{ color: totalIncome < 0 ? 'red' : 'green' }"
+              class="total test"
+            >
+              {{ totalIncome | currency : "₦" }}
+            </div>
+          </div>
+          <div *ngIf="incomeState" class="tabbody p-3">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>GL Name</th>
+                  <th class="balClass">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let income of incomes">
+                  <td>{{ income.number }}</td>
+                  <td>{{ income.name }}</td>
+                  <td
+                    *ngIf="income.balance <= -1"
+                    [ngStyle]="{ color: 'red' }"
+                    class="balClass"
+                  >
+                    {{ income.balance | currency : "₦" }}
+                  </td>
+                  <td *ngIf="income.balance >= 0" class="balClass positive">
+                    {{ income.balance | currency : "₦" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div *ngIf="incomeState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let income of incomes">
-              <td>{{ income.number }}</td>
-              <td>{{ income.name }}</td>
-              <td
-                *ngIf="income.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
-                class="balClass"
-              >
-                {{ income.balance | currency : "₦" }}
-              </td>
-              <td *ngIf="income.balance >= 0" class="balClass">
-                {{ income.balance | currency : "₦" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <div>
-    <div>
-      <div
-        (click)="changeExpenditure()"
-        class="total d-flex justify-content-between headBtn"
-      >
-        <h6 class="mb-0">EXPENDITURES</h6>
-        <div
-          [ngStyle]="{ color: totalExpenditure < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalExpenditure | currency : "₦" }}
+      <!-- EXPENDITURES -->
+      <div>
+        <div>
+          <div
+            (click)="changeExpenditure()"
+            class="total d-flex justify-content-between align-items-center headBtn"
+          >
+            <h6 class="mb-0">EXPENDITURES</h6>
+            <div
+              [ngStyle]="{ color: totalExpenditure < 0 ? 'red' : 'green' }"
+              class="total test"
+            >
+              {{ totalExpenditure | currency : "₦" }}
+            </div>
+          </div>
+          <div *ngIf="expenditureState" class="tabbody p-3">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>GL Name</th>
+                  <th class="balClass">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let expenditure of expenditures">
+                  <td>{{ expenditure.number }}</td>
+                  <td>{{ expenditure.name }}</td>
+                  <td
+                    *ngIf="expenditure.balance <= -1"
+                    [ngStyle]="{ color: 'red' }"
+                    class="balClass"
+                  >
+                    ( {{ expenditure.balance | currency : "₦" }} )
+                  </td>
+                  <td
+                    *ngIf="expenditure.balance >= 0"
+                    class="balClass positive"
+                  >
+                    {{ expenditure.balance | currency : "₦" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div *ngIf="expenditureState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let expenditure of expenditures">
-              <td>{{ expenditure.number }}</td>
-              <td>{{ expenditure.name }}</td>
-              <td
-                *ngIf="expenditure.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
-                class="balClass"
-              >
-                ( {{ expenditure.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="expenditure.balance >= 0" class="balClass">
-                {{ expenditure.balance | currency : "₦" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
-  </div>
-</div>
+  </body>
+</html>
