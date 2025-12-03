@@ -1,303 +1,242 @@
 <nav class="sidebar">
   <div class="header py-2 py-md-3 py-lg-3 mx-auto">
-    <a class="link dashy-logo" href="/"> <h5 class="logo">KwiKee</h5> </a
-    ><button class="btn btn-expand d-lg-none">
+    <a class="link dashy-logo" routerLink="/">
+      <h5 class="logo">KwiKee</h5>
+    </a>
+    <button class="btn btn-expand d-lg-none">
       <span><i class="ri-bar-chart-horizontal-line"></i></span>
     </button>
   </div>
+
   <div class="navigation mt-5 d-none d-lg-block">
+    <!-- HOME -->
     <h6>HOME</h6>
     <ul>
-      <a class="link" [routerLink]="['/dashboard']" routerLinkActive="active">
-        <li>
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/dashboard']">
           <span><i class="ri-home-5-line"></i>Dashboard</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/add-beneficiary']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/add-beneficiary']">
           <span><i class="ri-account-pin-box-line"></i>Add Beneficiary</span>
-        </li>
-      </a>
+        </a>
+      </li>
     </ul>
 
+    <!-- BUSINESS INSIGHTS -->
     <h6>YOUR BUSINESS INSIGHTS</h6>
     <ul>
-      <!-- Credit Section -->
-      <a
+      <!-- CREDIT -->
+      <li
         class="link"
-        style="cursor: pointer"
         data-bs-toggle="collapse"
-        href="#creditCollapse"
+        data-bs-target="#creditCollapse"
+        [ngClass]="{
+          act:
+            creditChild1RLA.isActive ||
+            creditChild2RLA.isActive ||
+            creditChild3RLA.isActive ||
+            creditChild4RLA.isActive
+        }"
       >
-        <li
-          [ngClass]="{
-            act: creditChild1RLA.isActive || creditChild2RLA.isActive
-          }"
-        >
-          <span
-            ><i class="ri-wallet-line"></i>Credit<i
-              class="ri-arrow-drop-down-line ms-4"
-            ></i
-          ></span>
+        <span>
+          <i class="ri-wallet-line"></i>
+          Credit
+          <i class="ri-arrow-drop-down-line ms-4"></i>
+        </span>
+      </li>
+
+      <ul class="collapse font ms-3" id="creditCollapse">
+        <li routerLinkActive="active" #creditChild1RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/credit']">
+            <span><i class="ri-wallet-line"></i>Credit</span>
+          </a>
         </li>
-      </a>
-      <ul>
-        <div class="collapse font ms-3" id="creditCollapse">
-          <a
-            class="link-drop"
-            #creditChild1RLA="routerLinkActive"
-            [routerLink]="['/credit']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-wallet-line"></i>Credit</span>
-            </li>
+
+        <li routerLinkActive="active" #creditChild2RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/credit-score-ranges']">
+            <span><i class="ri-line-chart-line"></i>Credit Score Ranges</span>
           </a>
-          <a
-            class="link-drop"
-            #creditChild2RLA="routerLinkActive"
-            [routerLink]="['/credit-score-ranges']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-line-chart-line"></i>Credit Score Ranges</span>
-            </li>
+        </li>
+
+        <li routerLinkActive="active" #creditChild3RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/credit-rate']">
+            <span><i class="ri-percent-line"></i>Credit Rate Setting</span>
           </a>
-          <a
-            class="link-drop"
-            #creditChild2RLA="routerLinkActive"
-            [routerLink]="['/credit-rate']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-line-chart-line"></i>Credit Rate Setting</span>
-            </li>
+        </li>
+
+        <li routerLinkActive="active" #creditChild4RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/mandate']">
+            <span><i class="ri-line-chart-line"></i>Mandate</span>
           </a>
-          <a
-            class="link-drop"
-            #creditChild2RLA="routerLinkActive"
-            [routerLink]="['/mandate']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-line-chart-line"></i>Mandate</span>
-            </li>
-          </a>
-        </div>
+        </li>
       </ul>
 
-      <a
-        class="link"
-        [routerLink]="['/transactions']"
-        routerLinkActive="active"
-      >
-        <li>
+      <!-- TRANSACTIONS -->
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/transactions']">
           <span><i class="ri-briefcase-2-line"></i>Transactions</span>
-        </li>
-      </a>
+        </a>
+      </li>
 
-      <!-- Savings Section -->
-      <a
+      <!-- SAVINGS -->
+      <li
         class="link"
-        style="cursor: pointer"
         data-bs-toggle="collapse"
-        href="#savingsCollapse"
+        data-bs-target="#savingsCollapse"
+        [ngClass]="{
+          act:
+            savingsChild1RLA.isActive ||
+            savingsChild2RLA.isActive ||
+            savingsChild3RLA.isActive ||
+            savingsChild4RLA.isActive ||
+            savingsChild5RLA.isActive
+        }"
       >
-        <li
-          [ngClass]="{
-            act:
-              savingsChild1RLA.isActive ||
-              savingsChild2RLA.isActive ||
-              savingsChild3RLA.isActive
-          }"
-        >
-          <span
-            ><i class="ri-bank-line"></i>Savings<i
-              class="ri-arrow-drop-down-line ms-4"
-            ></i
-          ></span>
+        <span>
+          <i class="ri-bank-line"></i>
+          Savings
+          <i class="ri-arrow-drop-down-line ms-4"></i>
+        </span>
+      </li>
+
+      <ul class="collapse font ms-3" id="savingsCollapse">
+        <li routerLinkActive="active" #savingsChild1RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/savings/kwik-max']">
+            <span><i class="ri-wallet-2-line"></i>Kwik Max</span>
+          </a>
         </li>
-      </a>
-      <ul>
-        <div class="collapse font ms-3" id="savingsCollapse">
-          <a
-            class="link-drop"
-            #savingsChild1RLA="routerLinkActive"
-            [routerLink]="['/savings/kwik-max']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-wallet-2-line"></i>Kwik Max</span>
-            </li>
+
+        <li routerLinkActive="active" #savingsChild2RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/savings/kwik-goal']">
+            <span><i class="ri-wallet-3-fill"></i>Kwik Goals</span>
           </a>
-          <a
-            class="link-drop"
-            #savingsChild2RLA="routerLinkActive"
-            [routerLink]="['/savings/kwik-goal']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-wallet-3-fill"></i>Kwik Goals</span>
-            </li>
+        </li>
+
+        <li routerLinkActive="active" #savingsChild3RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/kwikmax-rates']">
+            <span><i class="ri-percent-line"></i>KwikMax Rates</span>
           </a>
-          <a
-            class="link-drop"
-            #savingsChild3RLA="routerLinkActive"
-            [routerLink]="['/kwikmax-rates']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-percent-line"></i>KwikMax Rates</span>
-            </li>
+        </li>
+
+        <li routerLinkActive="active" #savingsChild4RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/kwikgoal-rate']">
+            <span><i class="ri-percent-line"></i>KwikGoal Rate</span>
           </a>
-          <a
-            class="link-drop"
-            #savingsChild3RLA="routerLinkActive"
-            [routerLink]="['/kwikgoal-rate']"
-            routerLinkActive="active"
-          >
-            <li class="sidebar-down">
-              <span><i class="ri-percent-line"></i>KwikGoal Rate</span>
-            </li>
+        </li>
+
+        <li routerLinkActive="active" #savingsChild5RLA="routerLinkActive">
+          <a class="link-drop" [routerLink]="['/savings/kwik-lite']">
+            <span><i class="ri-wallet-line"></i>KwikLite</span>
           </a>
-        </div>
+        </li>
       </ul>
 
-      <a class="link" [routerLink]="['/customers']" routerLinkActive="active">
-        <li>
+      <!-- CUSTOMERS -->
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/customers']">
           <span><i class="ri-team-line"></i>Customers</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/account-enquiry']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <!-- ACCOUNT ENQUIRY -->
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/account-enquiry']">
           <span><i class="ri-briefcase-2-line"></i>Account Enquiry</span>
-        </li>
-      </a>
+        </a>
+      </li>
     </ul>
 
+    <!-- REPORTS -->
     <h6>REPORTS</h6>
     <ul>
-      <a
-        class="link"
-        [routerLink]="['/reports/loans']"
-        routerLinkActive="active"
-      >
-        <li>
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/reports/loans']">
           <span><i class="ri-focus-2-line"></i>Loans Reports</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/reports/users']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/reports/users']">
           <span><i class="ri-focus-2-line"></i>Users Reports</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/reports/referrals']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/reports/referrals']">
           <span><i class="ri-line-chart-line"></i>Referrals</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/reports/full-stats']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/reports/full-stats']">
           <span><i class="ri-line-chart-line"></i>Reports & Statistics</span>
-        </li>
-      </a>
+        </a>
+      </li>
     </ul>
 
+    <!-- EXTRA -->
     <h6>EXTRA</h6>
     <ul>
-      <a
-        class="link"
-        [routerLink]="['/companies']"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="link" [routerLink]="['/companies']">
           <span><i class="ri-building-2-line"></i>Companies</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/companies/pending']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/companies/pending']">
           <span><i class="ri-building-2-line"></i>Pending Companies</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/companies/blacklisted']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/companies/blacklisted']">
           <span><i class="ri-building-2-line"></i>Blacklisted Companies</span>
-        </li>
-      </a>
-      <a class="link" [routerLink]="['/sectors']" routerLinkActive="active">
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/sectors']">
           <span><i class="ri-building-2-line"></i>Sectors</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/send-notifications']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/send-notifications']">
           <span><i class="ri-notification-3-line"></i>Send Notifications</span>
-        </li>
-      </a>
-      <a
-        class="link"
-        [routerLink]="['/fund-transfer']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/fund-transfer']">
           <span><i class="ri-wallet-3-line"></i>Fund Transfer</span>
-        </li>
-      </a>
-      <a class="link" [routerLink]="['/chart']" routerLinkActive="active">
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/chart']">
           <span><i class="ri-bar-chart-box-line"></i>Chart of Accounts</span>
-        </li>
-      </a>
+        </a>
+      </li>
     </ul>
 
+    <!-- SETTINGS -->
     <h6>SETTINGS</h6>
     <ul>
-      <a class="link" [routerLink]="['/teams']" routerLinkActive="active">
-        <li>
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/teams']">
           <span><i class="ri-stock-line"></i>Teams</span>
-        </li> </a
-      ><a
-        class="link"
-        [routerLink]="['/change-password']"
-        routerLinkActive="active"
-      >
-        <li>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a class="link" [routerLink]="['/change-password']">
           <span><i class="ri-key-line"></i>Change Password</span>
-        </li>
-      </a>
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

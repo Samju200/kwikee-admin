@@ -89,4 +89,55 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
     this.pageIndex = 1;
     this.fetchAllTransactions();
   }
+
+  downloadCSV() {
+    this.downloadTransactions('csv');
+  }
+
+  downloadExcel() {
+    this.downloadTransactions('excel');
+  }
+
+  downloadTransactions(format: 'csv' | 'excel') {
+    this.loading = true;
+
+    // Build download parameters (same as current filters)
+    const params = {
+      search_text: this.searchText,
+      product_mode: this.type,
+      start: this.startDate || undefined,
+      end: this.endDate || undefined,
+    };
+
+    this.service
+      .downloadTransactions(params, format)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: { blob: Blob; filename: string }) => {
+          this.loading = false;
+          this.downloadFile(response.blob, response.filename);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.alertService.error('Failed to download transactions');
+          console.error('Download error:', error);
+        },
+      });
+  }
+
+  private downloadFile(data: Blob, filename: string) {
+    // Create a blob URL for the file
+    const blob = new Blob([data], {
+      type: data.type || 'application/octet-stream',
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+  }
 }

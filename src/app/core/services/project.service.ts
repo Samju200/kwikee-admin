@@ -57,6 +57,49 @@ export class ProjectService {
       .post<any>(`${environment.baseUrl}loan/transactions/list`, params)
       .pipe(map((data) => data.transactions));
   }
+  downloadTransactions(
+    params: any,
+    format: 'csv' | 'excel' = 'csv'
+  ): Observable<any> {
+    // Add download parameter
+    const downloadParams = {
+      ...params,
+      download: format,
+    };
+
+    // Remove pagination parameters for download
+    delete downloadParams.page;
+    delete downloadParams.page_size;
+
+    return this.http
+      .post(`${environment.baseUrl}loan/transactions/list`, downloadParams, {
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          // Extract filename from Content-Disposition header
+          const contentDisposition = response.headers.get(
+            'Content-Disposition'
+          );
+          let filename = `transactions_${new Date()
+            .toISOString()
+            .slice(0, 10)}.${format === 'csv' ? 'csv' : 'xlsx'}`;
+
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (filenameMatch && filenameMatch[1]) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          return {
+            blob: response.body,
+            filename: filename,
+          };
+        })
+      );
+  }
   // In your project.service.ts
   getAccountEnquiry(params: any, exportType?: string): Observable<any> {
     const url = `${environment.baseUrl}accounts/account-enquiry`;
