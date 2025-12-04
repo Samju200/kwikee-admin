@@ -3,7 +3,19 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectService } from '@core/services/project.service';
+interface GLDownloadParams {
+  account_number: string;
+  start_date: string;
+  end_date: string;
+  format?: 'pdf' | 'csv' | 'excel';
+}
 
+interface GLQuickDownloadParams {
+  account_number: string;
+  start_date: string;
+  end_date: string;
+  format: 'pdf' | 'csv' | 'excel';
+}
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -36,6 +48,8 @@ export class ChartComponent implements OnInit {
   liabilityState = false;
   incomeState = false;
   expenditureState = false;
+  showDownloadModal = false;
+  selectedAccountNumber = '';
 
   constructor(
     private route: Router,
@@ -99,5 +113,114 @@ export class ChartComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+  // Add these new methods for download functionality
+  openDownloadModal(accountNumber: string) {
+    this.selectedAccountNumber = accountNumber;
+    this.showDownloadModal = true;
+  }
+
+  closeDownloadModal() {
+    this.showDownloadModal = false;
+    this.selectedAccountNumber = '';
+  }
+
+  // Quick download for today's transactions
+  quickDownloadToday(accountNumber: string) {
+    const today = new Date().toISOString().split('T')[0];
+
+    const params: GLQuickDownloadParams = {
+      account_number: accountNumber,
+      start_date: today,
+      end_date: today,
+      format: 'pdf',
+    };
+
+    this.service.downloadGLTransactions(params).subscribe({
+      next: (response) => {
+        this.downloadFile(response.blob, response.filename);
+        this.toastr.success(
+          `Today's transactions downloaded for ${accountNumber}`,
+          'Success'
+        );
+      },
+      error: (error) => {
+        this.toastr.error(
+          error.error?.message || 'Failed to download transactions',
+          'Error'
+        );
+      },
+    });
+  }
+
+  // Download for a custom date range
+  downloadDateRange(
+    accountNumber: string,
+    startDate: string,
+    endDate: string,
+    format: 'pdf' | 'csv' | 'excel' = 'pdf'
+  ) {
+    const params: GLQuickDownloadParams = {
+      account_number: accountNumber,
+      start_date: startDate,
+      end_date: endDate,
+      format: format,
+    };
+
+    this.service.downloadGLTransactions(params).subscribe({
+      next: (response) => {
+        this.downloadFile(response.blob, response.filename);
+        this.toastr.success(
+          `Transactions downloaded for ${accountNumber}`,
+          'Success'
+        );
+      },
+      error: (error) => {
+        this.toastr.error(
+          error.error?.message || 'Failed to download transactions',
+          'Error'
+        );
+      },
+    });
+  }
+  private downloadFile(blob: Blob, filename: string) {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  // Optional: View transactions without downloading
+  viewTransactions(accountNumber: string, startDate: string, endDate: string) {
+    const params = {
+      account_number: accountNumber,
+      start_date: startDate,
+      end_date: endDate,
+    };
+
+    this.service.getGLTransactions(params).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Handle the transaction data - you could display it in a modal or another component
+          console.log('Transactions:', response);
+          this.toastr.success(
+            `Found ${response.summary.total_transactions} transactions`,
+            'Success'
+          );
+        } else {
+          this.toastr.error(response.message, 'Error');
+        }
+      },
+      error: (error) => {
+        this.toastr.error(
+          error.error?.message || 'Failed to fetch transactions',
+          'Error'
+        );
+      },
+    });
   }
 }

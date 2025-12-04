@@ -720,4 +720,96 @@ export class ProjectService {
   addNewGl(data: any) {
     return this.http.post(`${environment.baseUrl}finance/add-new-gl`, data);
   }
+  // Add these methods to your project.service.ts
+
+  // GL Transactions Service Methods
+  downloadGLTransactions(params: {
+    account_number: string;
+    start_date: string;
+    end_date: string;
+    format?: 'csv' | 'excel' | 'pdf';
+  }): Observable<any> {
+    const url = `${environment.baseUrl}finance/download`;
+
+    return this.http
+      .get(url, {
+        params: params,
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          // Extract filename from Content-Disposition header
+          const contentDisposition = response.headers.get(
+            'Content-Disposition'
+          );
+          let filename = `GL_Transactions_${params.account_number}_${
+            params.start_date
+          }_to_${params.end_date}.${params.format || 'csv'}`;
+
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (filenameMatch && filenameMatch[1]) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          return {
+            blob: response.body,
+            filename: filename,
+          };
+        })
+      );
+  }
+
+  // For backward compatibility - single date
+  downloadGLTransactionsByDate(params: {
+    account_number: string;
+    date: string;
+    format?: 'csv' | 'excel' | 'pdf';
+  }): Observable<any> {
+    const url = `${environment.baseUrl}finance/download-single`;
+
+    return this.http
+      .get(url, {
+        params: params,
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          const contentDisposition = response.headers.get(
+            'Content-Disposition'
+          );
+          let filename = `GL_Transactions_${params.account_number}_${
+            params.date
+          }.${params.format || 'csv'}`;
+
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (filenameMatch && filenameMatch[1]) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          return {
+            blob: response.body,
+            filename: filename,
+          };
+        })
+      );
+  }
+
+  // Get GL transactions data without downloading
+  getGLTransactions(params: {
+    account_number: string;
+    start_date: string;
+    end_date: string;
+  }): Observable<any> {
+    const url = `${environment.baseUrl}gl-transactions`;
+
+    return this.http.get(url, {
+      params: params,
+    });
+  }
 }

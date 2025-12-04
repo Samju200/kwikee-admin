@@ -1,0 +1,146 @@
+<!-- download-modal.component.html -->
+<div
+  class="modal fade show"
+  [class.d-block]="showModal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Download GL Transactions</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="onClose()"
+          [disabled]="loading"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="downloadForm" (ngSubmit)="onDownload()">
+          <div class="mb-3">
+            <label for="account_number" class="form-label"
+              >Account Number</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="account_number"
+              formControlName="account_number"
+              [class.is-invalid]="
+                downloadForm.get('account_number')?.invalid &&
+                downloadForm.get('account_number')?.touched
+              "
+              placeholder="Enter GL account number"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                downloadForm.get('account_number')?.invalid &&
+                downloadForm.get('account_number')?.touched
+              "
+            >
+              Account number is required
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="start_date" class="form-label">Start Date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="start_date"
+                formControlName="start_date"
+                [class.is-invalid]="
+                  downloadForm.get('start_date')?.invalid &&
+                  downloadForm.get('start_date')?.touched
+                "
+                [max]="today"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  downloadForm.get('start_date')?.invalid &&
+                  downloadForm.get('start_date')?.touched
+                "
+              >
+                Please select a valid start date
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="end_date" class="form-label">End Date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="end_date"
+                formControlName="end_date"
+                [class.is-invalid]="
+                  downloadForm.get('end_date')?.invalid &&
+                  downloadForm.get('end_date')?.touched
+                "
+                [max]="today"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  downloadForm.get('end_date')?.invalid &&
+                  downloadForm.get('end_date')?.touched
+                "
+              >
+                Please select a valid end date
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="format" class="form-label">Download Format</label>
+            <select class="form-select" id="format" formControlName="format">
+              <option value="pdf">PDF</option>
+              <option value="excel">Excel</option>
+              <option value="csv">CSV</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="onClose()"
+              [disabled]="loading"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              (click)="quickDownloadToday()"
+              [disabled]="loading || !accountNumber"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2"
+              ></span>
+              Download Today
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="loading || downloadForm.invalid"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2"
+              ></span>
+              Download
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>

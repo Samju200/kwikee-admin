@@ -1,4 +1,3 @@
-<!-- chart.component.html -->
 <div class="container-fluid">
   <div class="d-flex flex-row justify-content-end">
     <button class="btn btn-primary my-3" (click)="openForm()">
@@ -7,25 +6,25 @@
     </button>
   </div>
 
-  <!-- ASSETS -->
-  <div>
-    <div>
-      <div
-        (click)="changeAssets()"
-        class="total d-flex justify-content-between align-items-center headBtn"
-      >
-        <h6 class="mb-0">ASSETS</h6>
-        <div [ngStyle]="{ color: totalAssets < 0 ? 'red' : 'green' }">
-          {{ totalAssets | currency : "₦" }}
-        </div>
-      </div>
-      <div *ngIf="assetState" class="tabbody p-3">
-        <table class="table table-hover">
+  <!-- ASSETS Section -->
+  <div class="card tabbody my-4">
+    <div
+      class="card-header headBtn d-flex justify-content-between align-items-center"
+      data-bs-toggle="collapse"
+      data-bs-target="#assetsTable"
+    >
+      <h5 class="mb-0">ASSETS</h5>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="collapse show" id="assetsTable">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
           <thead>
             <tr>
               <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
+              <th>Account Name</th>
+              <th class="text-end">Balance</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -33,14 +32,39 @@
               <td>{{ asset.number }}</td>
               <td>{{ asset.name }}</td>
               <td
-                *ngIf="asset.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
                 class="balClass"
+                [ngClass]="{
+                  negative: asset.balance < 0,
+                  positive: asset.balance >= 0
+                }"
               >
-                ( {{ asset.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="asset.balance >= 0" class="balClass positive">
                 {{ asset.balance | currency : "₦" }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="openDownloadModal(asset.number)"
+                  style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  DOWNLOAD
+                </button>
+                <button
+                  class="btn btn-sm btn-success"
+                  (click)="quickDownloadToday(asset.number)"
+                  style="
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  PDF
+                </button>
               </td>
             </tr>
           </tbody>
@@ -49,28 +73,25 @@
     </div>
   </div>
 
-  <!-- LIABILITIES -->
-  <div>
-    <div>
-      <div
-        (click)="changeLiability()"
-        class="total d-flex justify-content-between align-items-center headBtn"
-      >
-        <h6 class="mb-0">LIABILITIES</h6>
-        <div
-          [ngStyle]="{ color: totalLiability < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalLiability | currency : "₦" }}
-        </div>
-      </div>
-      <div *ngIf="liabilityState" class="tabbody p-3">
-        <table class="table table-hover">
+  <!-- LIABILITIES Section -->
+  <div class="card tabbody my-4">
+    <div
+      class="card-header headBtn d-flex justify-content-between align-items-center"
+      data-bs-toggle="collapse"
+      data-bs-target="#liabilitiesTable"
+    >
+      <h5 class="mb-0">LIABILITIES</h5>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="collapse show" id="liabilitiesTable">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
           <thead>
             <tr>
               <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
+              <th>Account Name</th>
+              <th class="text-end">Balance</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -78,14 +99,39 @@
               <td>{{ liability.number }}</td>
               <td>{{ liability.name }}</td>
               <td
-                *ngIf="liability.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
                 class="balClass"
+                [ngClass]="{
+                  negative: liability.balance < 0,
+                  positive: liability.balance >= 0
+                }"
               >
-                ( {{ liability.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="liability.balance >= 0" class="balClass positive">
                 {{ liability.balance | currency : "₦" }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="openDownloadModal(liabilities.number)"
+                  style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  DOWNLOAD
+                </button>
+                <button
+                  class="btn btn-sm btn-success"
+                  (click)="quickDownloadToday(liabilities.number)"
+                  style="
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  PDF
+                </button>
               </td>
             </tr>
           </tbody>
@@ -94,28 +140,25 @@
     </div>
   </div>
 
-  <!-- INCOME -->
-  <div>
-    <div>
-      <div
-        (click)="changeIncome()"
-        class="total d-flex justify-content-between align-items-center headBtn"
-      >
-        <h6 class="mb-0">INCOME</h6>
-        <div
-          [ngStyle]="{ color: totalIncome < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalIncome | currency : "₦" }}
-        </div>
-      </div>
-      <div *ngIf="incomeState" class="tabbody p-3">
-        <table class="table table-hover">
+  <!-- INCOME Section -->
+  <div class="card tabbody my-4">
+    <div
+      class="card-header headBtn d-flex justify-content-between align-items-center"
+      data-bs-toggle="collapse"
+      data-bs-target="#incomeTable"
+    >
+      <h5 class="mb-0">INCOME</h5>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="collapse show" id="incomeTable">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
           <thead>
             <tr>
               <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
+              <th>Account Name</th>
+              <th class="text-end">Balance</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -123,14 +166,39 @@
               <td>{{ income.number }}</td>
               <td>{{ income.name }}</td>
               <td
-                *ngIf="income.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
                 class="balClass"
+                [ngClass]="{
+                  negative: income.balance < 0,
+                  positive: income.balance >= 0
+                }"
               >
                 {{ income.balance | currency : "₦" }}
               </td>
-              <td *ngIf="income.balance >= 0" class="balClass positive">
-                {{ income.balance | currency : "₦" }}
+              <td>
+                <button
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="openDownloadModal(income.number)"
+                  style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  DOWNLOAD
+                </button>
+                <button
+                  class="btn btn-sm btn-success"
+                  (click)="quickDownloadToday(income.number)"
+                  style="
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  PDF
+                </button>
               </td>
             </tr>
           </tbody>
@@ -139,28 +207,25 @@
     </div>
   </div>
 
-  <!-- EXPENDITURES -->
-  <div>
-    <div>
-      <div
-        (click)="changeExpenditure()"
-        class="total d-flex justify-content-between align-items-center headBtn"
-      >
-        <h6 class="mb-0">EXPENDITURES</h6>
-        <div
-          [ngStyle]="{ color: totalExpenditure < 0 ? 'red' : 'green' }"
-          class="total test"
-        >
-          {{ totalExpenditure | currency : "₦" }}
-        </div>
-      </div>
-      <div *ngIf="expenditureState" class="tabbody p-3">
-        <table class="table table-hover">
+  <!-- EXPENDITURES Section -->
+  <div class="card tabbody my-4">
+    <div
+      class="card-header headBtn d-flex justify-content-between align-items-center"
+      data-bs-toggle="collapse"
+      data-bs-target="#expendituresTable"
+    >
+      <h5 class="mb-0">EXPENDITURES</h5>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="collapse show" id="expendituresTable">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
           <thead>
             <tr>
               <th>Account Number</th>
-              <th>GL Name</th>
-              <th class="balClass">Balance</th>
+              <th>Account Name</th>
+              <th class="text-end">Balance</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -168,14 +233,39 @@
               <td>{{ expenditure.number }}</td>
               <td>{{ expenditure.name }}</td>
               <td
-                *ngIf="expenditure.balance <= -1"
-                [ngStyle]="{ color: 'red' }"
                 class="balClass"
+                [ngClass]="{
+                  negative: expenditure.balance < 0,
+                  positive: expenditure.balance >= 0
+                }"
               >
-                ( {{ expenditure.balance | currency : "₦" }} )
-              </td>
-              <td *ngIf="expenditure.balance >= 0" class="balClass positive">
                 {{ expenditure.balance | currency : "₦" }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="openDownloadModal(expenditure.number)"
+                  style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  DOWNLOAD
+                </button>
+                <button
+                  class="btn btn-sm btn-success"
+                  (click)="quickDownloadToday(expenditure.number)"
+                  style="
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                  "
+                >
+                  PDF
+                </button>
               </td>
             </tr>
           </tbody>
@@ -183,4 +273,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Download Modal -->
+  <app-download-modal
+    [showModal]="showDownloadModal"
+    [accountNumber]="selectedAccountNumber"
+    (closeModal)="closeDownloadModal()"
+  >
+  </app-download-modal>
 </div>
